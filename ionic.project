@@ -1,0 +1,12 @@
+{
+  "name": "appOneMore",
+  "app_id": "6061ad40",
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
+  ]
+}

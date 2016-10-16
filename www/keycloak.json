@@ -1,0 +1,8 @@
+{
+  "realm": "socc3r",
+  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoVOMVbkqfFs1kt9Rx+RnN+EmqwMgodURRtAnyhEzPCjSmdsKXyDmwiCBm9iXdnlQGBUXbtQgfQxs/RVEVOeXvLehEqGftRab8NfuFzOVpf3tKZUGoPJDOsPZpHZm8ImrAQqy1jS/e+uZY8Oq7PMJdqXN/gOak41V8gJkY0/vLxiIy3uCaaE2Z/UepY2wu2EpaQy3jg1TX4ATNOqGtWuW0bTCQc+wZh0rckhpkpRVXQQk6GBWXf31cSKbYniQQlrc/W2MB6t8UhpkoeMgwR2NOQoPaVfYySiag8M2jx0a532kYb+lWFCIlP0vf+ur+oMNLXCqI0/oLv0LBP/cyTCsSwIDAQAB",
+  "auth-server-url": "http://localhost:8080/auth",
+  "ssl-required": "none",
+  "resource": "onemore-app",
+  "public-client": true
+}
