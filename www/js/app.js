@@ -6,12 +6,14 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter.services', []);
 angular.module('starter.directives', []);
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.directives', 'angular-jwt', 'ngStorage'])
+angular.module('starter.interceptors', ['ngStorage', 'angular-jwt']);
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.directives', 'starter.interceptors', 'angular-jwt', 'ngStorage'])
 
 .run(function($ionicPlatform, $rootScope) {
 
-  $rootScope.baseUrlBackend = 'http://192.168.56.2:9000/onemore';
+  $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
   $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
+
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -30,7 +32,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
   $stateProvider
-
+  
   .state('app', {
     url: '/app',
     abstract: true,
@@ -49,46 +51,72 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.events', {
+    url: '/events',
+    cache: false,
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html'
+        templateUrl: 'templates/events.html',
+        controller: 'EventsCtrl'
       }
     }
   })
 
-  .state('app.playlists', {
-      url: '/playlists',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
+  .state('app.viewEvent', {
+    url: '/view-event/:eventId',
     views: {
       'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
+        templateUrl: 'templates/viewEvent.html',
+        controller: 'ViewEventCtrl'
+      }
+    }
+  })
+
+  .state('app.newEvent', {
+    url: '/new-event',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/newEvent.html',
+        controller: 'NewEventCtrl'
       }
     }
   })
 
 
+  .state('app.eventsAdmin', {
+    url: '/events-admin',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/eventsAdmin.html',
+        controller: 'EventsAdminCtrl'
+      }
+    }
+  })
+
+  .state('app.confirmedEvents', {
+    url: '/confirmed-events',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/confirmedEvents.html',
+        controller: 'ConfirmedEventsCtrl'
+      }
+    }
+  })
+
+  .state('app.pendingInvites', {
+    url: '/pending-invites',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/pendingInvites.html',
+        controller: 'PendingInvitesCtrl'
+      }
+    }
+  })
+  
 //HARRY
   .state('welcome', {
     url: '/welcome',
     templateUrl: 'templates/welcome.html',
-    controller: 'LoginCtrl'
-  })
-
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
     controller: 'LoginCtrl'
   })
 

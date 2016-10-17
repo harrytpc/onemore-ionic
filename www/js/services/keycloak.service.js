@@ -7,6 +7,7 @@ angular.module('starter.services')
 		return $http({
 	        url: $rootScope.baseUrlSSO + '/protocol/openid-connect/token',
 	        method: "POST",
+	        skipAuthorization: true,
 	        data: 'grant_type=authorization_code&code='+code+'&client_id=onemoreapp&redirect_uri=http://localhost/callback',
 	        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    	})
@@ -25,6 +26,7 @@ angular.module('starter.services')
 		return $http({
 	        url: $rootScope.baseUrlSSO + '/protocol/openid-connect/token',
 	        method: "POST",
+	        skipAuthorization: true,
 	        data: 'grant_type=password&username=teste01@teste.com&password=123456&client_id=onemoreapp',
 	        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    	})
@@ -43,6 +45,7 @@ angular.module('starter.services')
 		return $http({
 	        url: $rootScope.baseUrlSSO + '/protocol/openid-connect/token',
 	        method: "POST",
+	        skipAuthorization: true,
 	        data: 'grant_type=refresh_token&refresh_token='+$localStorage.jwt.refresh_token+'&client_id=onemoreapp',
 	        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    	})
@@ -60,11 +63,13 @@ angular.module('starter.services')
 		return $http({
 	        url: $rootScope.baseUrlSSO + '/protocol/openid-connect/logout',
 	        method: "POST",
+	        skipAuthorization: true,
 	        data: 'refresh_token='+$localStorage.jwt.refresh_token+'&client_id=onemoreapp',
 	        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    	})
 			.success(function(data) {
-					$localStorage.jwt = null;
+				$localStorage.jwt = null;
+				$localStorage.loggedUser = null;
 	    		return data;
 			})
 	    	.error(function(data) {
@@ -77,9 +82,11 @@ angular.module('starter.services')
 		return $http({
 	        url: $rootScope.baseUrlSSO + '/account',
 	        method: "GET",
-	        headers: {'Accept': 'application/json', 'Authorization' : 'Bearer ' + $localStorage.jwt.access_token}
+	        // headers: {'Accept': 'application/json', 'Authorization' : 'Bearer ' + $localStorage.jwt.access_token}
+	        headers: {'Accept': 'application/json'}
 	    	})
 			.success(function(data) {
+				$localStorage.loggedUser = data;
 	    		return data;
 			})
 	    	.error(function(data) {

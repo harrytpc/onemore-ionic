@@ -24,7 +24,7 @@ angular.module('starter.controllers')
         
       })
       .error(function (error) {
-          alert('Erro ao fazer login');
+          alert('Erro ao fazer refresh');
       });
   };
 
@@ -43,10 +43,10 @@ angular.module('starter.controllers')
     
     KeycloakService.userInfo()
       .success(function (data) {
-        
+        alert(JSON.stringify (data));
       })
       .error(function (error) {
-          alert('Erro ao fazer logoff');
+          alert('Erro ao recuperar dados do usuario');
       });
   };
 

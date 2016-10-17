@@ -12,8 +12,8 @@ angular.module('starter.services')
 	  return $localStorage.things;
 	};
 	
-	StorageService.add = function (thing) {
-	  $localStorage.things.push(thing);
+	StorageService.add = function (obj) {
+	  $localStorage.things.push(obj);
 	}
 	
 	StorageService.remove = function (thing) {
