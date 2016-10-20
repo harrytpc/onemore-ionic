@@ -1,0 +1,58 @@
+<ion-view view-title="Pesquisar"  hide-back-button="false">
+  
+  <!-- <ion-nav-buttons side="left">
+      <button ui-sref="app.contacts" class="button button-clear button-deepblue-white">
+        <i class="white-color ion-arrow-left-c"></i>
+      </button>
+  </ion-nav-buttons> -->
+  <!-- <ion-nav-buttons side="right">
+    <button menu-toggle="right" class="button button-icon icon ion-ios-settings-strong" ui-sref="app.searchContacts"></button>
+  </ion-nav-buttons> -->
+
+  <!-- <ion-header-bar class="bar-light bar-subheader">
+    <input type="search"
+      placeholder="Filtrar usuários..."
+      ng-model="search">
+    
+  </ion-header-bar> -->
+
+  <ion-content class="padding full-height">
+    <!-- <ion-list>
+      <ion-item ng-repeat="user in contacts" >
+          {{user.firstName}} {{user.lastName}}
+      </ion-item>
+    </ion-list> -->
+
+      <ul class="list">
+        <li class="item item-button-right" ng-repeat="contact in contacts">
+          {{ contact.firstName }} {{contact.lastName}}
+          <!-- <span class="badge badge-assertive">{{ contact.id*100 }}</span> -->
+          
+          <button class="button" ng-if="contact.followed" ng-click="unfollow()">
+            Following
+          </button>
+
+          <button class="button" ng-if="!contact.followed" style="background-color:#99cc66 !important; " ng-click="follow(contact.id)">
+            Follow
+          </button>
+
+          <!-- <ion-toggle ng-model="airplaneMode" toggle-class="toggle-calm">Airplane Mode</ion-toggle> -->
+        </li>
+        
+        
+
+      </ul>
+
+    
+    <!-- div class="list">
+        <a class="item my-item"
+          collection-repeat="item in contacts | orderBy:'firstName' | searchContacts:search"
+          collection-item-height="60"
+          collection-item-width="'100%'">
+          
+          {{item.firstName+' '+item.lastName}}
+        </a>
+
+      </div> -->
+  </ion-content>
+</ion-view>

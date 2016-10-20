@@ -1,17 +1,105 @@
-<ion-view view-title="Buscar partidas"  hide-back-button="true">
+<ion-view view-title="Eventos"  hide-back-button="true">
 	<ion-nav-buttons side="right">
-		<button menu-toggle="right" class="button button-icon icon ion-ios-settings-strong"></button>
+		<button menu-toggle="right" class="button button-icon icon ion-ios-settings-strong" ng-click="teste()"></button>
 		<!-- <button menu-toggle="right" class="button button-icon icon ion-navicon"></button> -->
 	</ion-nav-buttons>
-	<ion-content>
-		{{teste}}
-		<ion-list>
-			<ion-item ng-repeat="event in events" href="#/app/view-event/{{event.id}}">
-		    	{{event.name}}
-			</ion-item>
-			<!-- <ion-item ng-repeat="event in events" ng-click="selectEvent(event)">
-		    	{{event.name}}
-			</ion-item> -->
-		</ion-list>
+	
+	<ion-content>	
+		<ion-refresher pulling-text="" on-refresh="filter()">
+		</ion-refresher>	
+		<ul class="list" >
+      		<li class="item item-button-right item-icons-bottom item-thumbnail-left" ng-repeat="event in events">
+	            <img ng-src="img/sports.png"> 
+
+        		<h2>01/01/2016</h2>
+          		<h4>{{ event.modality.name }} - {{ event.name }}</h4>
+          		<h4><b> Organizador: {{ event.owner.firstName }} {{ event.owner.lastName }}</b></h4>
+          		<h4><b> 2 Vaga(s)</b></h4>
+                <div class="buttons">
+                    <button class="button button-calm" ng-if="!event.admin" ng-click="solicitation(event)">
+                        <i class="icon ion-plus"></i>
+                    </button>
+                    <button class="button button-dark" ng-if="event.admin">
+                        <i class="icon ion-gear-a"></i>
+                    </button>
+                </div>
+        		
+			 </li>
+	     </ul>
 	</ion-content>
+	<div class="float-button">
+	  <span class="height-fix">
+	    <a class="content" >
+	      <i class="ion-plus-round"> </i>
+	    </a>
+	  </span>
+	</div>
+
+<script id="templates/modal-filter-events.html" type="text/ng-template">
+	<ion-modal-view class="custom-alert">
+		<ion-header-bar class="bar bar-header ">
+		    <h1 class="title">Filtrar Eventos</h1>
+		    <button class="button button-calm" ng-click="modalFilterEvents.hide()">Cancelar</button>
+
+		</ion-header-bar>
+		<ion-content item-button-bottom>
+			<div class="buttons">
+                
+				<div style="padding-top:10px;">
+
+				    <label class="item item-input">
+				   	    <i class="icon ion-person placeholder-icon"></i>
+			        	<input type="text" placeholder="Nome" ng-model="filter.event.name">
+				    </label>
+
+				    <label class="item item-input item-select">
+						<i class="icon ion-trophy placeholder-icon"></i>
+						<select ng-model="filter.event.modality.id"  placeholder="Modalidade">
+						    <option value="" disabled selected>Modalidade</option>
+					    	<option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
+					    </select>
+					</label>
+
+				</div>
+
+                
+				<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="filter(); modalFilterEvents.hide()">&nbsp;&nbsp;&nbsp;FILTRAR</button>                        
+				<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="clearFilter(); modalFilterEvents.hide()">&nbsp;&nbsp;&nbsp;LIMPAR FILTROS</button>                        
+            </div>
+
+			        
+		</ion-content>
+		
+	</ion-modal-view>
+</script>
 </ion-view>
+
+
+
+
+<!-- <script id="templates/modal.html" type="text/ng-template">
+      <ion-modal-view class="customeModel">
+        <ion-header-bar class="bar bar-header bar-positive">
+          <h1 class="title">New Contact</h1>
+          <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
+        </ion-header-bar>
+        <ion-content class="padding">
+          <div class="list">
+            <label class="item item-input">
+              <span class="input-label">First Name</span>
+              <input ng-model="newUser.firstName" type="text">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Last Name</span>
+              <input ng-model="newUser.lastName" type="text">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Email</span>
+              <input ng-model="newUser.email" type="text">
+            </label>
+            <button class="button button-full button-positive" ng-click="createContact(newUser)">Create</button>
+          </div>
+        </ion-content>
+      </ion-modal-view>
+    </script>
+     -->

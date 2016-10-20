@@ -2,7 +2,7 @@ angular.module('starter.interceptors')
 .config(function($stateProvider, $urlRouterProvider, $locationProvider, jwtInterceptorProvider, $httpProvider, jwtOptionsProvider) {
 
 	jwtOptionsProvider.config({
-  	whiteListedDomains: ['ec2-52-42-47-0.us-west-2.compute.amazonaws.com', 'localhost']
+  	whiteListedDomains: ['ec2-52-42-47-0.us-west-2.compute.amazonaws.com', 'localhost', 'zs-samsungativ', '10.0.0.156']
   });	
 
 	jwtInterceptorProvider.tokenGetter = function(jwtHelper, $http, $window, KeycloakService, $localStorage) {
@@ -24,7 +24,7 @@ angular.module('starter.interceptors')
       .error(function (error) {
       	$localStorage.jwt = null;
 				$localStorage.loggedUser = null;
-        alert('Refazer Login');
+        // alert('Refazer Login');
         $state.go('welcome'); 
       });
 

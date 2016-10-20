@@ -1,12 +1,7 @@
-<ion-view view-title="{{selectedEvent.name}}" >
-	<ion-nav-bar>
-		<!-- <button ui-sref="app.start" class="button button-clear button-deepblue-white"><i class="white-color ion-arrow-left-c"></></ -->
-		<ion-nav-back-button class="button-clear">
-			<i class="ion-arrow-left-c"></i> Voltar
-		</ion-nav-back-button>
-	</ion-nav-bar>
-
-	<ion-content>
-		
-	</ion-content>
+<ion-view view-title="{{event.name}}"  hide-back-button="false">
+  
+  <ion-content class="padding full-height">
+  	{{event.name}}
+      
+  </ion-content>
 </ion-view>

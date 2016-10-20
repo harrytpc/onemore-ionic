@@ -11,9 +11,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .run(function($ionicPlatform, $rootScope) {
 
-  $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
-  $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
-
+  // $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
+  // $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
+  // $rootScope.baseUrlBackend = 'http://localhost:8080/apiman-gateway/onemore/services/1.0';
+  // $rootScope.baseUrlSSO = 'http://localhost:8080/auth/realms/socc3r';
+  $rootScope.baseUrlBackend = 'http://10.0.0.156:8080/apiman-gateway/onemore/services/1.0';
+  $rootScope.baseUrlSSO = 'http://10.0.0.156:8080/auth/realms/socc3r';
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -51,6 +54,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
 
+  .state('app.searchContacts', {
+    url: '/searchContacts',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/searchContacts.html',
+        controller: 'SearchContactsCtrl'
+      }
+    }
+  })
+
   .state('app.events', {
     url: '/events',
     cache: false,
@@ -72,15 +86,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
 
-  .state('app.newEvent', {
-    url: '/new-event',
+  .state('app.editEvent', {
+    url: '/edit-event/:eventId',
     views: {
       'menuContent': {
-        templateUrl: 'templates/newEvent.html',
-        controller: 'NewEventCtrl'
+        templateUrl: 'templates/editEvent.html',
+        controller: 'EditEventCtrl'
       }
     }
   })
+
+  // .state('app.newEvent', {
+  //   url: '/new-event',
+  //   cache: false,
+  //   views: {
+  //     'menuContent': {
+  //       templateUrl: 'templates/newEvent.html',
+  //       controller: 'NewEventCtrl'
+  //     }
+  //   }
+  // })
 
 
   .state('app.eventsAdmin', {

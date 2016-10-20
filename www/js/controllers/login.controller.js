@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('LoginCtrl', function($scope, $ionicModal, $timeout, $rootScope, 
+.controller('LoginCtrl', function($scope, $ionicModal, $timeout, $rootScope, UserService,
   $state, $ionicPopup, $location, KeycloakService, $q, StorageService, jwtHelper, $ionicSideMenuDelegate) {
 
   $ionicSideMenuDelegate.canDragContent(false);
@@ -18,9 +18,16 @@ angular.module('starter.controllers')
 
         KeycloakService.token(requestToken)
           .success(function (data) {
+
             KeycloakService.userInfo()
               .success(function (data) {
-                $state.go('app.contacts');    
+
+                UserService.check(data) 
+                  .success(function (data) {
+
+                    $state.go('app.contacts');    
+
+                  });
               });
           })
           .error(function (error) {
@@ -40,16 +47,34 @@ angular.module('starter.controllers')
   }
 
   $scope.loginForcado = function() {
+    // KeycloakService.login()
+    //   .success(function (data) {
+    //     KeycloakService.userInfo()
+    //       .success(function (data) {
+    //         $state.go('app.contacts');    
+    //       });
+    //   })
+    //   .error(function (error) {
+    //       alert('Erro ao fazer login');
+    //   });
+
     KeycloakService.login()
       .success(function (data) {
+
         KeycloakService.userInfo()
           .success(function (data) {
-            $state.go('app.contacts');    
+
+            UserService.check(data)
+              .success(function (data) {
+
+                $state.go('app.contacts');    
+
+              });
           });
       })
       .error(function (error) {
-          alert('Erro ao fazer login');
-      });
+          console.log('Erro ao recuperar token');
+      }); 
   };
 
   $scope.goContacts = function(){

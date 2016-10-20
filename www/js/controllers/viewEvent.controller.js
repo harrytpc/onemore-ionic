@@ -1,6 +1,6 @@
 angular.module('starter.controllers')
 
-.controller('ViewEventCtrl', function($http, $scope, $ionicModal, $timeout, $rootScope, $stateParams) {
+.controller('ViewEventCtrl', function($http, $scope, $ionicModal, $timeout, $rootScope, $stateParams, EventService) {
 
 	$scope.eventId = $stateParams.eventId;
 
@@ -9,15 +9,14 @@ angular.module('starter.controllers')
  	findEvent();
 
 	function findEvent() {
-		$http.get($rootScope.baseUrl + '/events/' + $scope.eventId)
-			.success(function(data) {
-				$scope.selectedEvent = data;
-			})
-			.error(function(data, status) {
-				//console.error('Repos error', status, data);
-				$scope.teste = 'erro';
-			});
-		
+		EventService.getById($scope.eventId)
+			.success(function (data) {
+          $scope.event = data;
+        })
+        .error(function (error) {
+          $scope.status = 'Erro ao recuperar o evento';
+          console.log($scope.status);
+        });
 	};
  
 

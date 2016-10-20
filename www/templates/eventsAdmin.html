@@ -1,8 +1,10 @@
-<ion-view view-title="Administrar partidas"  hide-back-button="true">
-	<ion-nav-buttons side="right">
-		<button menu-toggle="right" class="button button-icon icon ion-ios-settings-strong"></button>
-	</ion-nav-buttons>
+<ion-view view-title="Administrar partidas x"  hide-back-button="true">
 	<ion-content>
 		
+		<ion-list>
+			<ion-item ng-repeat="event in events" href="#/app/edit-event/{{event.id}}" >
+		    	{{event.name}}
+			</ion-item>
+		</ion-list>
 	</ion-content>
 </ion-view>

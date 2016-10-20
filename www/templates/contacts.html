@@ -2,11 +2,41 @@
 <ion-view view-title="Contatos"  hide-back-button="true">
 	<ion-nav-buttons side="left">
     	<button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
-  	</ion-nav-buttons>
+  </ion-nav-buttons>
 	<ion-nav-buttons side="right">
-		<button menu-toggle="right" class="button button-icon icon ion-plus"></button>
+		<button menu-toggle="right" class="button button-icon icon ion-plus" ui-sref="app.searchContacts"></button>
 	</ion-nav-buttons>
 	<ion-content>
-		teste
+		<ul class="list">
+      <li class="item item-button-right" ng-repeat="contact in followings">
+        {{ contact.followed.firstName }} {{ contact.followed.lastName }}
+        <button class="button" ng-if="contact.followed" ng-click="unfollow(contact.followed.id)">
+          Following
+        </button>
+
+        <button class="button" ng-if="!contact.followed" style="background-color:#99cc66 !important; " ng-click="follow(contact.followed.id)">
+          Follow
+        </button>
+
+			 </li>
+     </ul>
 	</ion-content>
 </ion-view>
+
+
+<!-- <script id="templates/filter-contacts-modal.html" type="text/ng-template">
+	<ion-modal-view>
+	  <ion-header-bar class="bar bar-header bar-calm">
+	    <h1 class="title">Filtrar</h1>
+	    <button class="button button-clear button-primary" ng-click="modalFilterContacts.hide()">Cancelar</button>
+	  </ion-header-bar>
+	  <ion-content class="padding">
+	    
+
+			<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="filterContacts()">
+				&nbsp;&nbsp;&nbsp;FILTRAR
+			</button>        
+	  </ion-content>
+	</ion-modal-view>
+</script>
+ -->
