@@ -1,7 +1,65 @@
-<ion-view view-title="{{event.name}}"  hide-back-button="false">
-  
-  <ion-content class="padding full-height">
-  	{{event.name}}
-      
-  </ion-content>
-</ion-view>
+<ion-modal-view class="customeModel">
+<!-- <ion-view view-title="Nova partida"  hide-back-button="false"> -->
+	<ion-header-bar class="bar bar-header bar-calm">
+	    <h1 class="title" ng-if="event.id">{{event.name}}</h1>
+	    <button class="button button-clear button-primary" ng-click="modalViewEvent.hide()">Fechar</button>
+	</ion-header-bar>
+	<ion-content>
+		
+		<div style="padding-top:10px;">
+
+        <button class="button button-positive button-full button-small icon ion-person-stalker" ng-click="solicitation(event); $event.stopPropagation();">
+			&nbsp;&nbsp;&nbsp;Solicitar participar
+		</button>        
+
+		
+	    <label class="item item-input" ng-if="event.id">
+	    	<span class="input-label">Código do evento</span>
+	   	    {{event.id}}
+	    </label>
+	    	
+	    <label class="item item-input">
+	   	    <i class="icon ion-person placeholder-icon"></i>
+	   	    <span class="input-label">Nome</span>
+        	{{event.name}}
+	    </label>
+
+	    <label class="item item-input">
+	    	<i class="icon ion-calendar placeholder-icon"></i>
+    		<span class="input-label">Data</span>	
+        	{{event.dateStr}}
+	    </label>
+
+	    <label class="item item-input">
+			<i class="icon ion-trophy placeholder-icon"></i>
+			<span class="input-label">Modalidade</span>	
+			{{event.modality.name}}
+				
+		</label>
+
+		<label class="item item-input" >	
+	    	<i class="icon ion-person-stalker placeholder-icon"></i>
+	    	<span class="input-label">Máx. Participantes</span>	
+	      	{{event.maxParticipants}}
+	    </label>
+
+	   <label class="item item-input ">
+			<i class="icon ion-ios-location placeholder-icon"></i>
+			<span class="input-label">Estado</span>	
+			{{event.city.state.name}}
+		</label>
+		<label class="item item-input">
+			<i class="icon ion-ios-location placeholder-icon"></i>
+			<span class="input-label">Cidade</span>	
+			{{event.city.name}}
+		</label>
+
+	    <label class="item item-input" >	
+	    	<i class="icon ion-ios-navigate placeholder-icon"></i>
+	    	<span class="input-label">Local</span>	
+	    	{{event.local}}
+	    </label>
+
+		</div>
+	</ion-content>
+</ion-modal-view>

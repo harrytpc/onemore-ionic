@@ -1,77 +1,89 @@
-<ion-view view-title="Nova partida"  hide-back-button="true">
-	<ion-nav-buttons side="right">
-	</ion-nav-buttons>
+<ion-modal-view class="customeModel">
+<!-- <ion-view view-title="Nova partida"  hide-back-button="false"> -->
+	<ion-header-bar class="bar bar-header bar-calm">
+	    <h1 class="title" ng-if="event.id">{{event.nameTemp}}</h1>
+	    <h1 class="title" ng-if="!event.id">Novo evento</h1>
+	    <button class="button button-clear button-primary" ng-click="modalEditEvent.hide()">Fechar</button>
+	</ion-header-bar>
 	<ion-content>
 		
 		<div style="padding-top:10px;">
-	    <!-- <h3 class="sans-pro-light">Dados</h3> -->
+		<button class="button button-positive button-full button-small icon ion-person-stalker" ng-show="event.id" ng-click="selectContactsInvite()">
+			&nbsp;&nbsp;&nbsp;CONVIDAR
+		</button>        
 
-	    <label class="item item-input">
+		<div class="item item-divider">
+		    Dados do evento
+		</div>
+
+	    <label class="item item-input" ng-if="event.id">
+	    	<span class="input-label">Código do evento</span>
 	   	    {{event.id}}
 	    </label>
-
+	    	
 	    <label class="item item-input">
 	   	    <i class="icon ion-person placeholder-icon"></i>
-        	<input type="text" placeholder="Nome" ng-model="event.name">
+	   	    <span class="input-label">Nome</span>
+        	<input type="text"  ng-model="event.name">
 	    </label>
 
 	    <label class="item item-input">
+	      
 	    	<i class="icon ion-calendar placeholder-icon"></i>
-	        <input type="date" placeholder="Data do evento" ng-model="event.dateStr">
+    		<span class="input-label">Data</span>	
+        <input type="date"  ng-model="event.dateStr">
 	    </label>
 
 	    <label class="item item-input item-select">
-			<i class="icon ion-trophy placeholder-icon"></i>
-			<select ng-model="event.modality.id"  placeholder="Modalidade">
-			    <option value="" disabled selected>Modalidade</option>
-		    	<option ng-repeat="item in modalities" value="{{item.id}}">{{item.name}}</option>
-		    </select>
-		</label>
+				<i class="icon ion-trophy placeholder-icon"></i>
+				<span class="input-label">Modalidade</span>	
+				<select ng-model="event.modality.id"  placeholder="Modalidade">
+				    <option value="" disabled selected></option>
+			    	<option ng-repeat="item in editEvent.modalities" value="{{item.id}}">{{item.name}}</option>
+			    </select>
+			</label>
 
-	    <label class="item item-input item-select">
-			<i class="icon ion-ios-location placeholder-icon"></i>
-			<select ng-model="event.state.id" ng-change="onSelectState()">
-				<option value="" disabled selected>Estado</option>
-	    		<option ng-repeat="item in states" value="{{item.id}}">{{item.name}}</option>
-		    </select>
-		</label>
-		<label class="item item-input item-select">
-			<i class="icon ion-ios-location placeholder-icon"></i>
-			<select ng-model="event.city.id" ng-change="onSelectCity()">
-				<option value="" disabled selected>Cidade</option>
-		    	<option ng-repeat="item in cities" value="{{item.id}}">{{item.name}}</option>
-		    </select>
-		</label>
+			<label class="item item-input" >	
+	    	<i class="icon ion-person-stalker placeholder-icon"></i>
+	    	<span class="input-label">Máx. Participantes</span>	
+	      <input type="number" ng-model="event.maxParticipants" >
+	    </label>
 
-    <label class="item item-input" >	
-    	<i class="icon ion-ios-navigate placeholder-icon"></i>
-        <input type="text" placeholder="Local" ng-model="event.local" >
-    </label>
+	    <div class="item item-divider">
+		    Local
+		</div>
 
-    <div class="col"  ng-show="event.id">
-    
-			<a ng-click="selectContacts()" class="button button-icon">
-				<i class="icon ion-ionic ion-person-add"></i>
-				Enviar convites
-			</a>
 
-			<!-- <ion-list >
-					<ion-item ng-repeat="user in event.usersInvitations">
-			    	{{user.firstName}} {{user.lastName}}
-					</ion-item>
-	      </ion-checkbox>	
-			</ion-list> -->
+		   <label class="item item-input item-select">
+				<i class="icon ion-ios-location placeholder-icon"></i>
+				<span class="input-label">Estado</span>	
+				<select ng-model="event.state.id" ng-change="onSelectStateEditEvent()">
+					<option value="" disabled selected></option>
+		    		<option ng-repeat="item in editEvent.states" value="{{item.id}}">{{item.name}}</option>
+			    </select>
+			</label>
+			<label class="item item-input item-select">
+				<i class="icon ion-ios-location placeholder-icon"></i>
+				<span class="input-label">Cidade</span>	
+				<select ng-model="event.city.id" >
+					<option value="" disabled selected></option>
+			    	<option ng-repeat="item in editEvent.cities" value="{{item.id}}">{{item.name}}</option>
+			    </select>
+			</label>
 
-	</div>
-	    
-	<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="save()">&nbsp;&nbsp;&nbsp;SALVAR</button>        
-    	
+		    <label class="item item-input" >	
+		    	<i class="icon ion-ios-navigate placeholder-icon"></i>
+		    	<span class="input-label">Local</span>	
+		    	<input type="text" ng-model="event.local" >
+		    </label>
 
-		
-		
+		</div>
+
+		    
+	<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="saveEvent()">&nbsp;&nbsp;&nbsp;SALVAR</button>        
 
 	</ion-content>
-</ion-view>
+</ion-modal-view>
 
 <script id="templates/modal.html" type="text/ng-template">
 	<ion-modal-view>
@@ -96,18 +108,12 @@
 	  </ion-header-bar>
 	  <ion-content class="padding">
 	    <ion-list >
-				<!-- <ion-item ng-repeat="contact in contactsList" ng-click="checkContact(contact)">
-					<label class="checkbox">
-		        		<input type="checkbox" ng-click="checkContact(contact); $event.stopPropagation();" ng-model="contact.checked">
-		     		</label>
-			    	{{contact.name}}
-				</ion-item> -->
 
 				<ion-checkbox ng-repeat="relationship in relationshipList" ng-model="relationship.checked" ng-checked="relationship.checked" class="checkbox-calm">
          {{relationship.followed.firstName}} {{relationship.followed.lastName}}
         </ion-checkbox>
 			</ion-list>
-			<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="finishSelectContacts()">
+			<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="finishSelectContactsInvite()">
 				&nbsp;&nbsp;&nbsp;ENVIAR
 			</button>        
 	  </ion-content>

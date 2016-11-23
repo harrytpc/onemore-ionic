@@ -102,6 +102,18 @@ angular.module('starter.controllers')
 			EventService.insert($scope.event)
 				.success(function (data) {
           $scope.event = data;
+
+					var alertPopup = $ionicPopup.alert({
+				     title: 'Sucesso!',
+				     template: 'O evento foi criado com sucesso! Agora você já pode convidar seus amigos para participar.',
+				     cssClass: 'custom-alert',
+
+				   });
+
+				   alertPopup.then(function(res) {
+				     
+				   });
+
         })
         .error(function (error) {
           $scope.status = 'Erro ao inserir evento';
@@ -109,7 +121,6 @@ angular.module('starter.controllers')
           // alert($scope.status);
         }); 		
 		}
-		
 		
 		
 	}
@@ -138,18 +149,33 @@ angular.module('starter.controllers')
 
 	function finishSelectContacts(){
 		$scope.modalContacts.hide();
+		$scope.selectedUsers = [];
 		$scope.relationshipList.forEach(function(relationship) {
 			if(relationship.checked){
-				$scope.event.usersInvitations.push(relationship.followed);
-				// console.log(contact);	
+				$scope.selectedUsers.push(relationship.followed);
 			}
-	    
-	});
-		// $scope.event.contacts = $scope.contactsList
-		// angular.forEach($scope.contactsList, function(value, key) {
-		//   this.push(key + ': ' + value);
-		// }, log);
+		});
+		EventService.invite($scope.event.id, $scope.selectedUsers)
+			.success(function (data) {
+				getInvitations();
+        console.log(data)
+      })
+      .error(function (error) {
+        $scope.status = 'Erro ao enviar convites';
+        console.log($scope.status);
+      });
+		
 	}
+
+	function getInvitations(eventId){
+    EventService.getInvitations(eventId)
+      .success(function (data) {
+        $scope.invitations = data;
+      })
+      .error(function (error) {
+        alert('Ocorreu um erro ao recuperar os eventos');
+      });
+  }
 
 
 });

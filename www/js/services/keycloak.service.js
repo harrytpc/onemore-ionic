@@ -61,6 +61,8 @@ angular.module('starter.services')
 	};
 
 	KeycloakService.logoff = function() {
+		$localStorage.jwt = null;
+		$localStorage.loggedUser = null;			
 		return $http({
 	        url: $rootScope.baseUrlSSO + '/protocol/openid-connect/logout',
 	        method: "POST",
@@ -69,9 +71,7 @@ angular.module('starter.services')
 	        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	    	})
 			.success(function(data) {
-				$localStorage.jwt = null;
-				$localStorage.loggedUser = null;
-	    		return data;
+				return data;
 			})
 	    	.error(function(data) {
 	    		console.log ("erro ao fazer logoff")

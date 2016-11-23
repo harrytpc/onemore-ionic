@@ -8,8 +8,8 @@ angular.module('starter.controllers', [])
 
   $scope.logout = function(){
     // $rootScope.user = {};
-    KeycloakService.logoff();
     $state.go('welcome')
+    KeycloakService.logoff();
   };  
 
   // $scope.doLogin = function() {

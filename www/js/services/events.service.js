@@ -59,11 +59,30 @@ angular.module('starter.services')
 	    		return null;
 	    	});
 	};
+
+	EventService.getInvitations = function(eventId) {
+		return $http({
+	        url: $rootScope.baseUrlBackend + '/events/' + eventId + '/invitations' ,
+	        method: "GET",
+	        headers: {'Accept': 'application/json'}
+	    	})
+			.success(function(data) {
+	    		return data;
+			})
+	    	.error(function(data) {
+	    		console.log ("erro ao recuperar convites")
+	    		return null;
+	    	});
+	};
 	
  
 
 	EventService.insert = function(event) {
 		return $http.post($rootScope.baseUrlBackend + '/events', JSON.stringify(event));
+	};
+
+	EventService.invite = function(eventId, users) {
+		return $http.post($rootScope.baseUrlBackend + '/events/'+eventId+'/invite' , JSON.stringify(users));
 	};
 
 

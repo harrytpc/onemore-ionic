@@ -13,7 +13,8 @@ angular.module('starter.controllers')
     
     ref.addEventListener('loadstart', function(event) {
       if ((event.url).startsWith("http://localhost/callback")) {
-        requestToken = (event.url).split("code=")[1];
+        // requestToken = (event.url).split("code=")[1];
+        requestToken = (event.url).split("code=")[1].replace('#','');
         ref.close();
 
         KeycloakService.token(requestToken)
@@ -25,7 +26,7 @@ angular.module('starter.controllers')
                 UserService.check(data) 
                   .success(function (data) {
 
-                    $state.go('app.contacts');    
+                    $state.go('app.events');    
 
                   });
               });
@@ -67,7 +68,7 @@ angular.module('starter.controllers')
             UserService.check(data)
               .success(function (data) {
 
-                $state.go('app.contacts');    
+                $state.go('app.events');    
 
               });
           });
