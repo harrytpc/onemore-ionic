@@ -28,12 +28,12 @@
           {{ contact.firstName }} {{contact.lastName}}
           <!-- <span class="badge badge-assertive">{{ contact.id*100 }}</span> -->
           
-          <button class="button" ng-if="contact.followed" ng-click="unfollow()">
-            Following
+          <button class="button button-royal" ng-if="contact.followed" ng-click="unfollow()">
+            <i class="icon ion-close-round" ></i>
           </button>
 
           <button class="button" ng-if="!contact.followed" style="background-color:#99cc66 !important; " ng-click="follow(contact.id)">
-            Follow
+            <i class="icon ion-ios-personadd" ></i>
           </button>
 
           <!-- <ion-toggle ng-model="airplaneMode" toggle-class="toggle-calm">Airplane Mode</ion-toggle> -->

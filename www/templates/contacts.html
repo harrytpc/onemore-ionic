@@ -10,13 +10,13 @@
 		<ul class="list">
       <li class="item item-button-right" ng-repeat="contact in followings">
         {{ contact.followed.firstName }} {{ contact.followed.lastName }}
-        <button class="button" ng-if="contact.followed" ng-click="unfollow(contact.followed.id)">
-          Following
-        </button>
+				<button class="button button-assertive" ng-if="contact.followed" ng-click="unfollow(contact.followed.id)">
+            <i class="icon ion-close-round" ></i>
+          </button>
 
-        <button class="button" ng-if="!contact.followed" style="background-color:#99cc66 !important; " ng-click="follow(contact.followed.id)">
-          Follow
-        </button>
+          <button class="button" ng-if="!contact.followed" style="background-color:#99cc66 !important; " ng-click="follow(contact.followed.id)">
+            <i class="icon ion-follow-round" ></i>
+          </button>
 
 			 </li>
      </ul>
