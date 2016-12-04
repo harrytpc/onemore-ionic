@@ -4,19 +4,19 @@
 	<ion-content>
 		
 		<ul class="list" >
-      		<li class="item item-button-bottom item-icons-bottom item-thumbnail-left" ng-repeat="event in events">
+      		<li class="item striped item-button-bottom item-icons-bottom item-thumbnail-left" ng-repeat="event in events">
 	            <img ng-src="img/sports.png"> 
 
         		<h2>01/01/2016</h2>
           		<h4>{{ event.modality.name }} - {{ event.name }}</h4>
           		<h4><b> Organizador: {{ event.owner.firstName }} {{ event.owner.lastName }}</b></h4>
           		<h4><b> 2 Vaga(s)</b></h4>
-        		<div class="buttons">
+        		<div class="buttons action-buttons">
                     <button class="button button-balanced" ng-click="solicitation(event)" style="width: 100px">
-                        <i class="icon ion-checkmark-round"> &nbsp;Sim </i>
+                        <i class="icon ion-checkmark-round"></i>
                     </button>
                     <button class="button button-royal" style="width: 100px; background-color: red;">
-                        <i class="icon ion-close-round" >&nbsp;&nbsp;Não</i>
+                        <i class="icon ion-close-round" ></i>
                     </button>
                 </div>
         		
