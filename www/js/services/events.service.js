@@ -81,6 +81,10 @@ angular.module('starter.services')
 		return $http.post($rootScope.baseUrlBackend + '/events', JSON.stringify(event));
 	};
 
+	EventService.update = function(event) {
+		return $http.put($rootScope.baseUrlBackend + '/events/' + event.id, JSON.stringify(event));
+	};
+
 	EventService.invite = function(eventId, users) {
 		return $http.post($rootScope.baseUrlBackend + '/events/'+eventId+'/invite' , JSON.stringify(users));
 	};

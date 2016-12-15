@@ -15,7 +15,7 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-$calm:                            #40a1e2 !default;
+$calm:                            #607D8B !default;
 
 
 // The path for our ionicons font files, relative to the built CSS in www/css
@@ -38,7 +38,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 
 .custom-alert .button:last-child {
-	background-color: #65c3ba;
+	background-color: #33cd5f;
 } 
 
 .float-button {
@@ -48,7 +48,7 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
   width: 30px;
   padding: 30px;
   font-size: 40px;
-  background: #65c3ba;
+  background: #33cd5f;
   position: fixed;
   bottom: 20px; /* Adjust to where you want it */
   right: 20px; /* Adjust to where you want it */

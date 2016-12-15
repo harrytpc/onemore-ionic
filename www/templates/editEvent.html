@@ -1,99 +1,234 @@
 <ion-modal-view class="customeModel">
 <!-- <ion-view view-title="Nova partida"  hide-back-button="false"> -->
-	<ion-header-bar class="bar bar-header bar-calm">
+	<!-- <ion-header-bar class="bar bar-header bar-calm">
 	    <h1 class="title" ng-if="event.id">{{event.nameTemp}}</h1>
 	    <h1 class="title" ng-if="!event.id">Novo evento</h1>
 	    <button class="button button-clear button-primary" ng-click="modalEditEvent.hide()">Fechar</button>
-	</ion-header-bar>
-	<ion-content>
-		
-		<div style="padding-top:20px;">
-		<button class="button button-positive button-full button-small icon ion-person-stalker" style="margin: 0;" ng-show="event.id" ng-click="selectContactsInvite()">
-			&nbsp;&nbsp;&nbsp;CONVIDAR
-		</button>        
+	</ion-header-bar> -->
 
-		<div class="item item-divider">
-		    Dados do evento
+	<ion-header-bar align-title="left" class="bar-calm">
+		<button ng-click="modalEditEvent.hide()" class="button back-button buttons button-clear header-item">
+			<i class="icon ion-android-close"></i> 
+		</button>
+		<h1 class="title" ng-if="event.id">{{event.nameTemp}}</h1>
+	    <h1 class="title" ng-if="!event.id">Novo evento</h1>
+		<div class="buttons buttons-right" ng-if="event.id">
+			<button menu-toggle="right" class="button button-icon icon ion-person-add" ng-click="selectContactsInvite()"></button>	
 		</div>
 
-	    <label class="item item-input" ng-if="event.id">
-	    	<span class="input-label">Código do evento</span>
-	   	    {{event.id}}
-	    </label>
-	    	
-	    <label class="item item-input">
-	   	    <i class="icon ion-person placeholder-icon"></i>
-	   	    <span class="input-label">Nome</span>
-        	<input type="text"  ng-model="event.name">
-	    </label>
 
-	    <label class="item item-input">
-	      
-	    	<i class="icon ion-calendar placeholder-icon"></i>
-    		<span class="input-label">Data</span>	
-        <input type="date"  ng-model="event.dateStr">
-	    </label>
+	</ion-header-bar>
 
-	    <label class="item item-input item-select">
-				<i class="icon ion-trophy placeholder-icon"></i>
-				<span class="input-label">Modalidade</span>	
-				<select ng-model="event.modality.id"  placeholder="Modalidade">
+	<ion-content>
+
+		<div class="list" style="padding-top:20px;">
+            
+			<!-- <button class="button button-positive button-full button-small icon ion-person-stalker" style="margin: 0;" ng-show="event.id" ng-click="selectContactsInvite()">
+				&nbsp;&nbsp;&nbsp;CONVIDAR
+			</button>         -->
+
+			<div class="row" ng-if="event.id">	
+				<div class="col col-10 text-center" style="padding-top: 40px">
+					<i class="icon ion-key" style="font-size: 30px;"></i>					
+				</div>
+				<div class="col col-90 " style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<span class="input-label">Código do evento</span>
+		   	    		<input type="text" placeholder="Partida dos amigos" ng-model="event.id" disabled="true" 
+			    			style="border-bottom: 1px; border-style: solid;">
+		    		</label>	
+				</div>
+			</div>	
+
+			<div class="item item-divider">
+			    Dados do evento
+			</div> 
+
+		    <!-- <label class="item item-input" ng-if="event.id">
+		    	<span class="input-label">Código do evento</span>
+		   	    {{event.id}}
+		    </label> -->
+			
+
+		    <div class="row" >
+				<div class="col col-10 text-center" style="padding-top: 40px">
+					<i class="icon ion-trophy" style="font-size: 30px;"></i>					
+				</div>
+				<div class="col col-90" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<span class="input-label">Nome</span>
+			    		<input type="text" placeholder="Partida dos amigos" ng-model="event.name" 
+			    			style="border-bottom: 1px; border-style: solid;">
+		    		</label>	
+				</div>
+			</div>	
+		    	
+		    
+	      	<div class="row"  style="border: 0px">
+				<div class="col col-45 col-offset-10" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+	    	    		<span class="input-label">Data</span>	
+			        	<input type="date" ng-model="event.date" style="border-bottom: 1px; border-style: solid;">	
+		        	</label>
+		        </div>
+		        <div class="col" style="border: 0px">
+		        	<label class="item item-input item-stacked-label" style="border: 0px">  
+			        	<span class="input-label">Horário</span>	
+			        	<input type="time"  ng-model="event.time" style="border-bottom: 1px; border-style: solid;">	
+			        </label>	
+		        </div>
+		    </div>
+
+ 
+		    <div class="row" >
+				<div class="col col-90 col-offset-10" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<div  style="border: 0px">
+							<span class="input-label">Modalidade</span>
+						</div>
+			    		<select ng-model="event.modality.id"  ng-options="item.id as item.name for item in editEvent.modalities"
+			    		 placeholder="Modalidade" style="border:0px; position: relative !important; width: 100%; border-bottom: 1px; border-style: solid;">
+						    <option value="" disabled></option>
+					    </select>
+		    		</label>	
+				</div>
+			</div>	
+
+			<div class="row" >
+				<div class="col col-90 col-offset-10" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<span class="input-label">Max Participantes</span>
+			    		<input type="tel" placeholder="10" ng-model="event.maxParticipants"
+			    			style="border-bottom: 1px; border-style: solid;">
+		    		</label>	
+				</div>
+			</div>	
+
+		    <!-- <label class="item item-input item-select">
+			    <div class="input-label" style="width:100% !important; max-width: 100% !important;">
+			      Modalidade
+			    </div>
+				<select ng-model="event.modality.id"  placeholder="Modalidade" style="position: relative !important;">
 				    <option value="" disabled selected></option>
 			    	<option ng-repeat="item in editEvent.modalities" value="{{item.id}}">{{item.name}}</option>
 			    </select>
-			</label>
+			</label> -->
 
-			<label class="item item-input" >	
-	    	<i class="icon ion-person-stalker placeholder-icon"></i>
-	    	<span class="input-label">Máx. Participantes</span>	
-	      <input type="number" ng-model="event.maxParticipants" >
-	    </label>
+			<!-- <label class="item item-input" >	
+		    	<i class="icon ion-person-stalker placeholder-icon"></i>
+		    	<span class="input-label">Máx. Participantes</span>	
+		      <input type="number" ng-model="event.maxParticipants" >
+		    </label> -->
 
-	    <div class="item item-divider">
-		    Local
-		</div>
+		    <div class="item item-divider">
+			    Local
+			</div>
+
+				
+			<div class="row" >
+				<div class="col col-10 text-center" style="padding-top: 30px">
+					<i class="icon ion-ios-location" style="font-size: 30px;"></i>					
+				</div>
+				<div class="col col-90" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<div  style="border: 0px">
+							<span class="input-label">Estado</span>
+						</div>
+			    		<select ng-model="event.state.id"  ng-change="onSelectStateEditEvent()"
+							ng-options="item.id as item.name for item in editEvent.states"
+			    		 	style="border:0px; position: relative !important; width: 100%; border-bottom: 1px; border-style: solid;">
+						    <option value="" disabled></option>
+					    </select>
 
 
-		   <label class="item item-input item-select">
+		    		</label>	
+				</div>
+			</div>	
+
+			<div class="row" >
+				<div class="col col-90 col-offset-10" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<div  style="border: 0px">
+							<span class="input-label">Cidade</span>
+						</div>
+						<select ng-model="event.city.id"  
+							ng-options="item.id as item.name for item in editEvent.cities"
+			    		 	style="border:0px; position: relative !important; width: 100%; border-bottom: 1px; border-style: solid;">
+						    <option value="" disabled></option>
+					    </select>
+			    		
+		    		</label>	
+				</div>
+			</div>	
+
+			<div class="row" >
+				<div class="col col-90 col-offset-10" style="border: 0px">
+					<label class="item item-input item-stacked-label" style="border: 0px">
+						<span class="input-label">Endereço</span>
+			    		<input type="text" placeholder="Multi Sport - Rua exemplo, 22" ng-model="event.local" 
+			    			style="border-bottom: 1px; border-style: solid;">
+		    		</label>	
+				</div>
+			</div>	
+
+		   <!-- <label class="item item-input item-select">
 				<i class="icon ion-ios-location placeholder-icon"></i>
 				<span class="input-label">Estado</span>	
 				<select ng-model="event.state.id" ng-change="onSelectStateEditEvent()">
 					<option value="" disabled selected></option>
 		    		<option ng-repeat="item in editEvent.states" value="{{item.id}}">{{item.name}}</option>
 			    </select>
-			</label>
-			<label class="item item-input item-select">
+			</label> -->
+			<!-- <label class="item item-input item-select">
 				<i class="icon ion-ios-location placeholder-icon"></i>
 				<span class="input-label">Cidade</span>	
 				<select ng-model="event.city.id" >
 					<option value="" disabled selected></option>
 			    	<option ng-repeat="item in editEvent.cities" value="{{item.id}}">{{item.name}}</option>
 			    </select>
-			</label>
+			</label> -->
 
-		    <label class="item item-input" >	
+		    <!-- <label class="item item-input" >	
 		    	<i class="icon ion-ios-navigate placeholder-icon"></i>
 		    	<span class="input-label">Local</span>	
 		    	<input type="text" ng-model="event.local" >
-		    </label>
+		    </label> -->
 
 		</div>
 
 		    
-	<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="saveEvent()">&nbsp;&nbsp;&nbsp;SALVAR</button>        
+		<!-- <button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="saveEvent()">&nbsp;&nbsp;&nbsp;SALVAR</button>         -->
+
+		<div style="padding: 20px">
+			<button class="button button-block button-balanced" ng-click="saveEvent()">
+			  SALVAR
+			</button>
+		</div>
 
 	</ion-content>
 </ion-modal-view>
 
-<script id="templates/modal.html" type="text/ng-template">
+<script id="templates/modalCamposObrigatorios.html" type="text/ng-template">
 	<ion-modal-view>
 		<ion-header-bar class="bar bar-header bar-calm">
 	    <h1 class="title">Campos Obrigatórios</h1>
-	    <button class="button button-clear button-primary" ng-click="modalAlert.hide()">Fechar</button>
+	    <!-- <button class="button button-clear button-primary" ng-click="modalCamposObrigatorios.hide()">Fechar</button> -->
 	  </ion-header-bar>
-		<ion-content>
-			<h5> Verifique os campos: </h5>
+		<ion-content style="padding: 20px">
+			<h5> Preencha corretamente os campos abaixo </h5>
 			
+			<div >
+				<ul class="list" >
+      				<li ng-repeat="campo in camposObrigatorios">
+      					- {{campo}}
+      				</li>	
+      			</ul>	
+			</div>
+			<div style="padding: 20px">
+				<button class="button button-block button-balanced" ng-click="modalCamposObrigatorios.hide()">
+				  OK
+				</button>
+			</div>
 			<!-- <button class="button button-calm button-full button-small" ng-click="modalAlert.hide()">FECHAR</button>         -->
 		</ion-content>
 		

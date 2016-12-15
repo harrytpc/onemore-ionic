@@ -1,14 +1,15 @@
 <ion-view view-title="Eventos"  hide-back-button="false">
+	
 	<ion-nav-buttons side="right">
-		<button menu-toggle="right" class="button button-icon icon ion-ios-settings-strong" ng-click="modalFilter()"></button>
+		<button menu-toggle="right" class="button button-icon icon ion-funnel" ng-click="modalFilter()"></button>
 		<!-- <button menu-toggle="right" class="button button-icon icon ion-navicon"></button> -->
 	</ion-nav-buttons>
 	
-	<ion-content>	
+	<ion-content style="background-color: #e5e5e5">	
 		<ion-refresher pulling-text="" on-refresh="filterEvents()">
 		</ion-refresher>	
-		<ul class="list" >
-      		<li ng-click="viewEvent(event); $event.stopPropagation(); " class="item striped item-button-right item-icons-bottom item-thumbnail-left" ng-repeat="event in events">
+		<!-- <ul class="list" >
+      		<li ng-click="viewEvent(event); $event.stopPropagation(); " class="item striped item-button-right item-thumbnail-left" ng-repeat="event in events">
 	            <img ng-src="img/sports.png"> 
 
         		<h2>01/01/2016</h2>
@@ -16,16 +17,88 @@
           		<h4><b> Organizador: {{ event.owner.firstName }} {{ event.owner.lastName }}</b></h4>
           		<h4><b> 2 Vaga(s)</b></h4>
                 <div class="buttons">
-                    <!-- <button class="button button-calm" ng-if="!event.admin" ng-click="solicitation(event); $event.stopPropagation();">
-                        <i class="icon ion-plus"></i>
-                    </button> -->
                     <button class="button button-assertive" ng-if="event.admin" ng-click="editEvent(event); $event.stopPropagation();">
                         <i class="icon ion-gear-a"></i>
                     </button>
                 </div>
         		
 			 </li>
-	     </ul>
+	     </ul> -->
+
+        <div class="list card" ng-repeat="event in events">
+            <div class="item item-avatar item-button-right">
+                <img ng-src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/5/005/04f/3b3/37a0f9b.jpg">
+                <!-- <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png"> -->
+                
+                <span style="color: black; font-size: 15px; font-weight: 600;">
+                    {{ event.owner.firstName }} {{ event.owner.lastName }}
+                </span> 
+                <span style="color: #b2b2b2; font-weight: 500; font-size: 11px; ">
+                adicionou um novo evento 
+                </span>
+                
+                <p> <h6 style="color: #b2b2b2">{{timestampToDateStr(event.dateCreation)}}</h6></p>
+
+                <!-- <button class="button button-dark" ng-if="event.admin" ng-click="editEvento(event); $event.stopPropagation();">
+                        <i class="icon ion-gear-a"> </i>
+                </button> -->
+
+                <button class="button button-light" ng-if="event.admin" ng-click="showPopoverAdmin($event, event)">
+                        <i class="icon ion-gear-a" > </i>
+                </button>
+
+                
+
+
+            </div>
+            <div class="item item-body" style="padding: 0px">
+
+                <!-- <div class="item item-thumbnail-right"> -->
+                <div class="item item-button-right" >
+                    <!-- <img ng-src="img/sports.png" style="max-height: 40px; max-width: 35px;"> -->
+                    <button class="button button-small" 
+                        style="width: 80px; text-align: center; vertical-align:middle; display: block;
+                        font-size: 11px; border:solid 2px;   border-radius:5px; border-color: {{event.modality.color}}; ">
+                        {{ event.modality.name }} 
+                    </button>
+
+                    <p style="color: #455A64; font-size: 12px; font-weight: 800; margin-top:0px; margin-bottom:0px">{{event.name}}</p>
+                    <p style="margin-top:0px; margin-bottom:0px; color: #37474F">{{timestampToDate(event.date)}}</p>
+                    <p style="margin-top:0px; margin-bottom:0px; color: #37474F">{{event.local}}</p>
+                    <p style="margin-top:0px; margin-bottom:0px; color: #37474F">{{event.city.name}} -   {{event.city.state.initials}}</p>
+                    <!-- <p style="margin-top:0px; margin-bottom:0px; color: #37474F" ></p> -->
+                    
+                    <p>
+                        <a class="subdued calm" ng-click="openModalConfirmeds()">10 confirmado(s)</a>
+                        <a class="subdued">5 vaga(s)</a>
+                    </p>
+                </div>
+                
+                
+            </div>
+            <div class="item tabs tabs-secondary tabs-icon-left " ng-if="!event.admin">
+                <!-- <a class="tab-item" href="#">
+                    <i class="icon ion-thumbsup"></i>
+                    Curtir
+                </a> -->
+                <a class="tab-item" ng-if="!event.solicitationSent" ng-click="solicitation(event); $event.stopPropagation();">
+                    <i class="icon ion-person-add"></i>
+                    Participar
+                </a>
+
+                <a class="tab-item positive" ng-if="event.solicitationSent" ng-click="solicitation(event); $event.stopPropagation();">
+                    <i class="icon ion-person-add"></i>
+                    Solicitação enviada
+                </a>
+
+                <a class="tab-item" href="#">
+                    <i class="icon ion-star"></i>
+                    Favoritos
+                </a>
+                
+            </div>
+        </div>
+
 	</ion-content>
 	<div class="float-button">
 	  <span class="height-fix">
@@ -37,40 +110,112 @@
 
 	<script id="templates/modal-filter-events.html" type="text/ng-template">
 		<ion-modal-view class="custom-alert">
-			<ion-header-bar class="bar bar-header ">
-			    <h1 class="title">Filtrar Eventos</h1>
-			    <button class="button button-calm" ng-click="modalFilterEvents.hide();$event.stopPropagation();">Cancelar</button>
-
+			<ion-header-bar align-title="left" class="bar-calm">
+				<button ng-click="modalFilterEvents.hide();$event.stopPropagation();" class="button back-button buttons button-clear header-item">
+					<i class="icon ion-android-close"></i> 
+				</button>
+				<h1 class="title">Filtros</h1>
+				<div class="buttons buttons-right"></div>
 			</ion-header-bar>
+
 			<ion-content item-button-bottom>
-				<div class="buttons event-buttons">
-	                
-					<div style="padding-top:20px;">
+                    <div class="list">
+                        <div class="item item-divider">
+                            Modalidade
+                        </div>
+                        <label class="item item-input item-select" >
+                            <span class="input-label">Modalidade</span>
+                            <select ng-model="filter.event.modality.id" >
+                                <option value="" disabled selected>Todas</option>
+                                <option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+                        </label>
+                        <div class="item item-divider">
+                            Data
+                        </div>
 
-					    <label class="item item-input">
-					   	    <i class="icon ion-person placeholder-icon"></i>
-				        	<input type="text" placeholder="Nome" ng-model="filter.event.name">
-					    </label>
+                        <label class="item item-input ">
+                            <span class="input-label">Data</span>
+                            <input type="date" style="text-align: right;">
+                        </label>
 
-					    <label class="item item-input item-select">
-							<i class="icon ion-trophy placeholder-icon"></i>
-							<select ng-model="filter.event.modality.id"  placeholder="Modalidade">
-							    <option value="" disabled selected>Modalidade</option>
-						    	<option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
-						    </select>
-						</label>
+                        <div class="item item-divider">
+                            Local
+                        </div>
+                        <label class="item item-input item-select" >
+                            <span class="input-label">Estado</span>
+                            <select ng-model="filter.event.modality.id" >
+                                <option value="" disabled selected>Todas</option>
+                                <option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+                        </label>
+                        <label class="item item-input item-select" >
+                            <span class="input-label">Cidade</span>
+                            <select ng-model="filter.event.modality.id" >
+                                <option value="" disabled selected>Todas</option>
+                                <option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
+                            </select>
+                        </label>
+                        
+                    </div>
 
-					</div>
-
-					<button class="button button-calm button-full button-small " ng-click="filterEvents(); modalFilterEvents.hide()">FILTRAR</button>                        
-					<button class="button button-calm button-full button-small " ng-click="clearFilter(); modalFilterEvents.hide()">LIMPAR FILTROS</button>                        
-				</div>
-
+                    <div class="item tabs tabs-secondary tabs-icon-left" style="margin-top: 20px">
+                        <a class="tab-item" ng-click="clearFilter(); modalFilterEvents.hide()" style="font-weight: 800">
+                            <!-- <i class="icon ion-star calm"></i> -->
+                            LIMPAR TUDO 
+                        </a>
+                        <a class="tab-item" ng-click="filterEvents(); modalFilterEvents.hide()" style="font-weight: 800;  color: #455A64">
+                            <!-- <i class="icon ion-person-add calm"></i> -->
+                            APLICAR FILTRO
+                        </a>
+                        
+                    </div>
 				        
 			</ion-content>
 			
 		</ion-modal-view>
 	</script>
+
+
+    <script id="templates/modal-confirmeds.html" type="text/ng-template">
+        <ion-modal-view class="custom-alert">
+            <ion-header-bar align-title="left" class="bar-calm">
+                <button ng-click="modalConfirmeds.hide();$event.stopPropagation();" class="button back-button buttons button-clear header-item">
+                    <i class="icon ion-android-close"></i> 
+                </button>
+                <h1 class="title">Confirmados</h1>
+                <div class="buttons buttons-right"></div>
+            </ion-header-bar>
+
+            <ion-content item-button-bottom>
+                    <div class="list">
+                        <div class="item item-avatar">
+                            <img ng-src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/5/005/04f/3b3/37a0f9b.jpg">
+                            <h2>Harry Trinta</h2>
+                            <!-- <p>Back off, man. I'm a scientist.</p> -->
+                        </div>
+                    </div>
+            </ion-content>
+            
+        </ion-modal-view>
+    </script>
+
+
+    <script id="templates/popoverAdmin.html" type="text/ng-template">
+      <ion-popover-view style="height: 120px">
+        <ion-content>
+          <div class="list">
+            <a class="item" ng-click="editEvento(); popoverAdmin.hide();" target="_blank">
+              Editar
+            </a>
+            <a class="item" ng-click="deleteEvent(); popoverAdmin.hide();" target="_blank">
+              Excluir
+            </a>
+          </div>
+        </ion-content>
+      </ion-popover-view>
+    </script>
+
 </ion-view>
 
 

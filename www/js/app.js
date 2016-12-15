@@ -11,12 +11,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .run(function($ionicPlatform, $rootScope) {
 
-   $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
-   $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
-  //$rootScope.baseUrlBackend = 'http://localhost:8080/apiman-gateway/onemore/services/1.0';
-  //$rootScope.baseUrlSSO = 'http://localhost:8080/auth/realms/socc3r';
-  // $rootScope.baseUrlBackend = 'http://10.0.0.7:8080/apiman-gateway/onemore/services/1.0';
-  // $rootScope.baseUrlSSO = 'http://10.0.0.7:8080/auth/realms/socc3r';
+   // $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
+   // $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
+  
+  // $rootScope.baseUrlBackend = 'http://localhost:8080/apiman-gateway/onemore/services/1.0';
+  // $rootScope.baseUrlSSO = 'http://localhost:8080/auth/realms/socc3r';
+  
+  $rootScope.baseUrlBackend = 'http://10.0.0.17:8080/apiman-gateway/onemore/services/1.0';
+  $rootScope.baseUrlSSO = 'http://10.0.0.17:8080/auth/realms/socc3r';
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

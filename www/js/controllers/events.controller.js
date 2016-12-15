@@ -1,14 +1,12 @@
 angular.module('starter.controllers')
 
 .controller('EventsCtrl', function($scope, $ionicModal, $timeout, $rootScope, $http, 
-  EventService, $ionicPopup, ModalityService, StateService, RelationshipService ) {
-
+  EventService, $ionicPopup, ModalityService, StateService, RelationshipService, $ionicPopover ) {
 
   $scope.solicitation = solicitation;
   $scope.filterEvents = filterEvents;
   $scope.clearFilter = clearFilter;
-
- 	
+  
   init();
 
   function init(){
@@ -52,26 +50,35 @@ angular.module('starter.controllers')
 
   function solicitation(event){
 
-     var confirmPopup = $ionicPopup.confirm({
-       title: 'Solicitação',
-       template: 'Enviar solicitação para partipar do evento?',
-       cssClass: 'custom-alert',
-       buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-          text: 'Não',
-          type: 'button-default',
-          onTap: function(e) {
-            // e.preventDefault() will stop the popup from closing when tapped.
-            // e.preventDefault();
-          }
-        }, {
-          text: 'Sim',
-          type: 'button-positive',
-          onTap: function(e) {
-            // Returning a value will cause the promise to resolve with the given value.
-            // return scope.data.response;
-          }
-        }]
-     });
+    if(event.solicitationSent == null || event.solicitationSent == false){
+      event.solicitationSent = true;      
+    }else{
+      event.solicitationSent = false;      
+    }
+
+    // event.solicitationSent = event.solicitationSent == false || ;
+
+     // var confirmPopup = $ionicPopup.confirm({
+     //   title: 'Solicitação',
+     //   template: 'Enviar solicitação para partipar do evento?',
+     //   cssClass: 'custom-alert',
+     //   buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+     //      text: 'Não',
+     //      type: 'button-default',
+     //      onTap: function(e) {
+     //        // e.preventDefault() will stop the popup from closing when tapped.
+     //        // e.preventDefault();
+     //      }
+     //    }, {
+     //      text: 'Sim',
+     //      type: 'button-positive',
+     //      onTap: function(e) {
+     //        // Returning a value will cause the promise to resolve with the given value.
+     //        // return scope.data.response;
+     //        event.solicitationSent = true;
+     //      }
+     //    }]
+     // });
    
   }
 
@@ -83,6 +90,17 @@ angular.module('starter.controllers')
     }).then(function(modal) {
       $scope.modalFilterEvents = modal;
       $scope.modalFilterEvents.show()
+    });
+
+    
+  }
+
+  $scope.openModalConfirmeds = function(event){
+    $ionicModal.fromTemplateUrl('templates/modal-confirmeds.html', {
+      scope: $scope
+    }).then(function(modal) {
+      $scope.modalConfirmeds = modal;
+      $scope.modalConfirmeds.show()
     });
 
     
@@ -101,11 +119,9 @@ angular.module('starter.controllers')
   }
 
 
-  $scope.editEvent = function(event){
-    $scope.event = {};
-
-
-
+  $scope.editEvento = function(){
+    $scope.event = {}; 
+    $scope.editEvent = {};
     $ionicModal.fromTemplateUrl('templates/editEvent.html', {
       scope: $scope,
       animation: 'slide-in-up'
@@ -113,7 +129,7 @@ angular.module('starter.controllers')
       $scope.modalEditEvent = modal;
       $scope.modalEditEvent.show();
       // $scope.newEvent.
-      initEditEvent(event);
+      initEditEvent($scope.eventTemp);
     });
   }
 
@@ -133,23 +149,32 @@ angular.module('starter.controllers')
     EventService.getById(event.id)
       .success(function (data) {
           $scope.event = data;
+          $scope.event.date = new Date($scope.event.date);
+          $scope.event.time = $scope.event.date;
           $scope.event.nameTemp = $scope.event.name;
+          $scope.event.state = $scope.event.city.state
+          // $scope.event.modality.id = '4';
           getInvitations($scope.event.id);
+
+          StateService.findStates()
+          .success(function (data) {
+            $scope.editEvent.states = data;
+            $scope.onSelectStateEditEvent();
+          });    
 
         })
         .error(function (error) {
           $scope.status = 'Erro ao recuperar o evento';
           console.log($scope.status);
         });
+    
     ModalityService.findModality()
       .success(function (data) {
         $scope.editEvent.modalities = data;
+
       });
 
-    StateService.findStates()
-      .success(function (data) {
-        $scope.editEvent.states = data;
-      });    
+    
   }
 
   function initViewEvent(event){
@@ -196,24 +221,59 @@ angular.module('starter.controllers')
             }); 
   }
 
-  $scope.saveEvent = function(){
+  function validSave(event){
+    var camposObrigatorios=[];
 
     if(!$scope.event.name){
+      camposObrigatorios.push('Nome');
+    }
+    if(!$scope.event.date){
+      camposObrigatorios.push('Data');
+    }
+    if(!$scope.event.time){
+      camposObrigatorios.push('Horário');
+    }
+    if(!$scope.event.modality || !$scope.event.modality.id){
+      camposObrigatorios.push('Modalidade');
+    }
+    if(!$scope.event.state || !$scope.event.state.id){
+      camposObrigatorios.push('Estado');
+    }
+    if(!$scope.event.city || !$scope.event.city.id){
+      camposObrigatorios.push('Cidade');
+    }
+    if(!$scope.event.local){
+      camposObrigatorios.push('Endereço');
+    }
 
-      $scope.itemList=[];
-      $scope.itemList.push('Campo1');
+    return camposObrigatorios;
+  }
+
+  $scope.saveEvent = function(){
+    camposObrigatorios = validSave();
+
+    if(camposObrigatorios.length){
+
+      $scope.camposObrigatorios = camposObrigatorios;
+      // $scope.camposObrigatorios.push('Campo1');
       
-      $ionicModal.fromTemplateUrl('templates/modal.html', {
+      $ionicModal.fromTemplateUrl('templates/modalCamposObrigatorios.html', {
           scope: $scope
         }).then(function(modal) {
-          $scope.modalAlert = modal;
-          $scope.modalAlert.show()
+          $scope.modalCamposObrigatorios = modal;
+          $scope.modalCamposObrigatorios.show();
         });
 
 
     }else{
       
-      EventService.insert($scope.event)
+      // $scope.event.date = $scope.event.dateStr;
+
+      $scope.event.date.setHours($scope.event.time.getHours());
+      $scope.event.date.setMinutes($scope.event.time.getMinutes());
+
+      if(!$scope.event.id){
+        EventService.insert($scope.event)
         .success(function (data) {
           $scope.event = data;
 
@@ -221,7 +281,6 @@ angular.module('starter.controllers')
              title: 'Sucesso!',
              template: 'O evento foi criado com sucesso! Agora você já pode convidar seus amigos para participar.',
              cssClass: 'custom-alert',
-
            });
 
            alertPopup.then(function(res) {
@@ -233,7 +292,34 @@ angular.module('starter.controllers')
           $scope.status = 'Erro ao inserir evento';
           console.log($scope.status);
           // alert($scope.status);
-        });     
+        });       
+      }else{
+        
+
+        EventService.update($scope.event)
+        .success(function (data) {
+          // $scope.event = data;
+
+          var alertPopup = $ionicPopup.alert({
+             title: 'Sucesso!',
+             template: 'O evento foi atualizado com sucesso!',
+             cssClass: 'custom-alert',
+           });
+
+           alertPopup.then(function(res) {
+             $scope.modalEditEvent.hide();
+           });
+
+        })
+        .error(function (error) {
+          $scope.status = 'Erro ao atualizar evento';
+          console.log($scope.status);
+          // alert($scope.status);
+        });       
+
+      }
+
+      
     }
     
     
@@ -285,8 +371,70 @@ angular.module('starter.controllers')
       });
   }
 
+  var monthNames = [
+    "Janeiro", "Fevereiro", "Março",
+    "Abril", "Maio", "Junho", "Julho",
+    "Agosto", "Setembro", "Outubro",
+    "Novembro", "Dezembro"
+  ];
 
+  $scope.timestampToDateStr = function(dateTimestamp){
+    var date = new Date(dateTimestamp);
 
+    return (pad(date.getDate()) + ' de ' + monthNames[date.getMonth()] + ' de ' + date.getFullYear() 
+      + ' às ' + pad(date.getHours()) + ':' + pad(date.getMinutes()));
 
+  }
+
+  $scope.timestampToDate = function(dateTimestamp){
+    var date = new Date(dateTimestamp);
+
+    return (pad(date.getDate()) + '/' + pad(date.getMonth()) + '/' + date.getFullYear() 
+      + ' às ' + pad(date.getHours()) + ':' + pad(date.getMinutes()));
+
+  }
+
+  function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+  }
+
+  $ionicPopover.fromTemplateUrl('templates/popoverAdmin.html', {
+    scope: $scope,
+  }).then(function(popover) {
+    $scope.popoverAdmin = popover;
+  });
+
+  $scope.showPopoverAdmin = function($event, event){
+    $scope.eventTemp = event; 
+    $scope.popoverAdmin.show($event);
+  }
+  
+
+  $scope.deleteEvent = function(){
+
+   
+     var confirmDeletePopup = $ionicPopup.confirm({
+       title: 'Exclusão',
+       template: 'Você realmente deseja excluir o evento?',
+       cssClass: 'custom-alert',
+       buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
+          text: 'Não',
+          type: 'button-default',
+          onTap: function(e) {
+            // e.preventDefault() will stop the popup from closing when tapped.
+            // e.preventDefault();
+          }
+        }, {
+          text: 'Sim',
+          type: 'button-positive',
+          onTap: function(e) {
+            // Returning a value will cause the promise to resolve with the given value.
+            // return scope.data.response;
+            // event.solicitationSent = true;
+          }
+        }]
+     });
+
+  }
 
 });
