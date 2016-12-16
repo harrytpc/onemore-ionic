@@ -18,17 +18,40 @@ angular.module('starter.services')
 	    	});
 	};
 
+
+	function pad(n) {
+    	return (n < 10) ? ("0" + n) : n;
+  	}
+
 	EventService.filter = function(filter) {
 		var url = $rootScope.baseUrlBackend + '/events?'; 
 		
-		if(filter.modality && filter.modality.id){
-			url += 'modalityId='+filter.modality.id+'&';
-		}
-
 		if(filter.name){
 			url += 'name='+filter.name+'&';
 		}
 
+		if(filter.id){
+			url += 'id='+filter.id+'&';
+		}
+
+		if(filter.date){
+			var dateStr = pad(filter.date.getDate()) + '-' + pad(filter.date.getMonth()+1) + '-' + filter.date.getFullYear();
+			
+			url += 'date='+dateStr+'&';	
+		}
+
+		if(filter.state && filter.state.id){
+			url += 'stateId='+filter.state.id+'&';
+		}
+		
+		if(filter.city && filter.city.id){
+			url += 'cityId='+filter.city.id+'&';
+		}
+
+
+		if(filter.modality && filter.modality.id){
+			url += 'modalityId='+filter.modality.id+'&';
+		}
 
 		return $http({
 	        url: url,
@@ -87,6 +110,10 @@ angular.module('starter.services')
 
 	EventService.invite = function(eventId, users) {
 		return $http.post($rootScope.baseUrlBackend + '/events/'+eventId+'/invite' , JSON.stringify(users));
+	};
+
+	EventService.request = function(eventId) {
+		return $http.post($rootScope.baseUrlBackend + '/events/' + eventId + '/request');
 	};
 
 

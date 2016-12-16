@@ -1,12 +1,5 @@
 <ion-modal-view class="customeModel">
-<!-- <ion-view view-title="Nova partida"  hide-back-button="false"> -->
-	<!-- <ion-header-bar class="bar bar-header bar-calm">
-	    <h1 class="title" ng-if="event.id">{{event.nameTemp}}</h1>
-	    <h1 class="title" ng-if="!event.id">Novo evento</h1>
-	    <button class="button button-clear button-primary" ng-click="modalEditEvent.hide()">Fechar</button>
-	</ion-header-bar> -->
-
-	<ion-header-bar align-title="left" class="bar-calm">
+	<ion-header-bar align-title="center" class="bar-calm">
 		<button ng-click="modalEditEvent.hide()" class="button back-button buttons button-clear header-item">
 			<i class="icon ion-android-close"></i> 
 		</button>
@@ -15,21 +8,43 @@
 		<div class="buttons buttons-right" ng-if="event.id">
 			<button menu-toggle="right" class="button button-icon icon ion-person-add" ng-click="selectContactsInvite()"></button>	
 		</div>
-
-
 	</ion-header-bar>
 
 	<ion-content>
 
-		<div class="list" style="padding-top:20px;">
-            
-			<!-- <button class="button button-positive button-full button-small icon ion-person-stalker" style="margin: 0;" ng-show="event.id" ng-click="selectContactsInvite()">
-				&nbsp;&nbsp;&nbsp;CONVIDAR
-			</button>         -->
+		<div class="item item-divider positive" ng-if="event.id">
+		    Gerenciar participantes
+		</div> 
+
+		<div style="padding-top: 10px" ng-if="event.id">
+			<div class="item tabs tabs-secondary tabs-icon-left" style="border: 0px">
+	            <a class="tab-item" ng-click="openModalSolicPartEdit(event)" style="font-weight: 800; color: #000000;background-color: #c7c1c1; margin: 2px">
+	                Solic. Pendentes ({{event.invitationsSummary.pendingApproval}})
+	            </a>
+	            <a class="tab-item" ng-click="openModalConfirmedsEdit(event)" style="font-weight: 800;  color: #000000; background-color: #33cd5f ; margin: 2px">
+	                Confirmados ({{event.invitationsSummary.confirmed}})
+	            </a>
+	        </div>
+	        <div class="item tabs tabs-secondary tabs-icon-left" style="border: 0px">
+	            <a class="tab-item" ng-click="openModalPendingEdit(event)" style="font-weight: 800;  color: #000000; background-color: #e7e04a; margin: 2px">
+	                Pendentes ({{event.invitationsSummary.pendingInvites}})
+	            </a>
+	            <a class="tab-item" ng-click="openModalDeclinedEdit(event)" style="font-weight: 800; color: #000000; background-color: #e59090; margin: 2px">
+	                Recusados ({{event.invitationsSummary.declined}})
+	            </a>
+	            
+	        </div>
+	    </div>
+
+		<div class="list" style="padding-top:10px;">
+
+			<div class="item item-divider positive">
+			    Dados do evento
+			</div> 
 
 			<div class="row" ng-if="event.id">	
 				<div class="col col-10 text-center" style="padding-top: 40px">
-					<i class="icon ion-key" style="font-size: 30px;"></i>					
+					<i class="icon ion-trophy" style="font-size: 30px;"></i>					
 				</div>
 				<div class="col col-90 " style="border: 0px">
 					<label class="item item-input item-stacked-label" style="border: 0px">
@@ -40,19 +55,9 @@
 				</div>
 			</div>	
 
-			<div class="item item-divider">
-			    Dados do evento
-			</div> 
-
-		    <!-- <label class="item item-input" ng-if="event.id">
-		    	<span class="input-label">Código do evento</span>
-		   	    {{event.id}}
-		    </label> -->
-			
-
 		    <div class="row" >
 				<div class="col col-10 text-center" style="padding-top: 40px">
-					<i class="icon ion-trophy" style="font-size: 30px;"></i>					
+					<i class="icon ion-trophy" style="font-size: 30px;" ng-if="!event.id"></i>					
 				</div>
 				<div class="col col-90" style="border: 0px">
 					<label class="item item-input item-stacked-label" style="border: 0px">
@@ -104,26 +109,9 @@
 				</div>
 			</div>	
 
-		    <!-- <label class="item item-input item-select">
-			    <div class="input-label" style="width:100% !important; max-width: 100% !important;">
-			      Modalidade
-			    </div>
-				<select ng-model="event.modality.id"  placeholder="Modalidade" style="position: relative !important;">
-				    <option value="" disabled selected></option>
-			    	<option ng-repeat="item in editEvent.modalities" value="{{item.id}}">{{item.name}}</option>
-			    </select>
-			</label> -->
-
-			<!-- <label class="item item-input" >	
-		    	<i class="icon ion-person-stalker placeholder-icon"></i>
-		    	<span class="input-label">Máx. Participantes</span>	
-		      <input type="number" ng-model="event.maxParticipants" >
-		    </label> -->
-
-		    <div class="item item-divider">
+		    <div class="item item-divider positive">
 			    Local
 			</div>
-
 				
 			<div class="row" >
 				<div class="col col-10 text-center" style="padding-top: 30px">
@@ -171,33 +159,7 @@
 				</div>
 			</div>	
 
-		   <!-- <label class="item item-input item-select">
-				<i class="icon ion-ios-location placeholder-icon"></i>
-				<span class="input-label">Estado</span>	
-				<select ng-model="event.state.id" ng-change="onSelectStateEditEvent()">
-					<option value="" disabled selected></option>
-		    		<option ng-repeat="item in editEvent.states" value="{{item.id}}">{{item.name}}</option>
-			    </select>
-			</label> -->
-			<!-- <label class="item item-input item-select">
-				<i class="icon ion-ios-location placeholder-icon"></i>
-				<span class="input-label">Cidade</span>	
-				<select ng-model="event.city.id" >
-					<option value="" disabled selected></option>
-			    	<option ng-repeat="item in editEvent.cities" value="{{item.id}}">{{item.name}}</option>
-			    </select>
-			</label> -->
-
-		    <!-- <label class="item item-input" >	
-		    	<i class="icon ion-ios-navigate placeholder-icon"></i>
-		    	<span class="input-label">Local</span>	
-		    	<input type="text" ng-model="event.local" >
-		    </label> -->
-
 		</div>
-
-		    
-		<!-- <button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="saveEvent()">&nbsp;&nbsp;&nbsp;SALVAR</button>         -->
 
 		<div style="padding: 20px">
 			<button class="button button-block button-balanced" ng-click="saveEvent()">
@@ -211,9 +173,8 @@
 <script id="templates/modalCamposObrigatorios.html" type="text/ng-template">
 	<ion-modal-view>
 		<ion-header-bar class="bar bar-header bar-calm">
-	    <h1 class="title">Campos Obrigatórios</h1>
-	    <!-- <button class="button button-clear button-primary" ng-click="modalCamposObrigatorios.hide()">Fechar</button> -->
-	  </ion-header-bar>
+	    	<h1 class="title">Campos Obrigatórios</h1>
+	  	</ion-header-bar>
 		<ion-content style="padding: 20px">
 			<h5> Preencha corretamente os campos abaixo </h5>
 			
@@ -229,7 +190,6 @@
 				  OK
 				</button>
 			</div>
-			<!-- <button class="button button-calm button-full button-small" ng-click="modalAlert.hide()">FECHAR</button>         -->
 		</ion-content>
 		
 	</ion-modal-view>
@@ -237,20 +197,134 @@
 
 <script id="templates/contacts-modal.html" type="text/ng-template">
 	<ion-modal-view>
-	  <ion-header-bar class="bar bar-header ">
-	    <h1 class="title">Selecionar</h1>
-	    <button class="button button-clear button-primary" ng-click="modalContacts.hide()">Cancelar</button>
-	  </ion-header-bar>
-	  <ion-content class="padding">
-	    <ion-list >
+	 
+		<ion-header-bar align-title="center" class="bar-calm">
+			<button ng-click="modalContacts.hide()" class="button back-button buttons button-clear header-item">
+				<i class="icon ion-android-close"></i> 
+			</button>
+			<h1 class="title" >Convidar contatos</h1>
+		</ion-header-bar>
 
+	  	<ion-content class="padding">
+	    	<ion-list >
 				<ion-checkbox ng-repeat="relationship in relationshipList" ng-model="relationship.checked" ng-checked="relationship.checked" class="checkbox-calm">
-         {{relationship.followed.firstName}} {{relationship.followed.lastName}}
-        </ion-checkbox>
+         			{{relationship.followed.firstName}} {{relationship.followed.lastName}}
+        		</ion-checkbox>
 			</ion-list>
-			<button class="button button-calm button-full button-small icon ion-checkmark-round" ng-click="finishSelectContactsInvite()">
-				&nbsp;&nbsp;&nbsp;ENVIAR
-			</button>        
-	  </ion-content>
+			
+			<div style="padding: 20px">
+				<button class="button button-block button-balanced" ng-click="finishSelectContactsInvite()">
+				  CONVIDAR
+				</button>
+			</div>
+	  	</ion-content>
+	</ion-modal-view>
+</script>
+
+<!-- Modal Solic Part -->
+<script id="templates/modal-solic-part-edit.html" type="text/ng-template">
+	<ion-modal-view>
+	 
+		<ion-header-bar align-title="center" class="bar-calm">
+			<button ng-click="modalSolicPartEdit.hide()" class="button back-button buttons button-clear header-item">
+				<i class="icon ion-android-close"></i> 
+			</button>
+			<h1 class="title" >Solicitações Pendentes</h1>
+		</ion-header-bar>
+
+	  	<ion-content class="padding">
+	  		<div class="list" ng-repeat="invitation in SolicsList" >
+                <div class="item item-avatar item-button-right">
+                    <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png">
+                    <h2>{{invitation.player.firstName}} {{invitation.player.lastName}}</h2>
+                    <div class="buttons">
+					    <button class="button button-balanced" ng-click="answerSolic(invitation.id, true)">
+					    	<i class="icon ion-checkmark " ></i>
+					    </button>
+				    	<button class="button button-assertive" ng-click="answerSolic(invitation.id, false)">
+				     		<i class="icon ion-close" ></i>
+				    	</button>
+				    </div>
+                </div>
+            </div>
+
+	  	</ion-content>
+	</ion-modal-view>
+</script>
+
+<!-- Modal Confirmados -->
+<script id="templates/modal-confirmeds-edit.html" type="text/ng-template">
+	<ion-modal-view>
+	 
+		<ion-header-bar align-title="center" class="bar-calm">
+			<button ng-click="modalConfirmedsEdit.hide()" class="button back-button buttons button-clear header-item">
+				<i class="icon ion-android-close"></i> 
+			</button>
+			<h1 class="title" >Confirmados</h1>
+		</ion-header-bar>
+
+	  	<ion-content class="padding">
+
+	  		<div class="list" ng-repeat="invitation in confirmedsList" >
+                <div class="item item-avatar item-button-right">
+                    <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png">
+                    <h2>{{invitation.player.firstName}} {{invitation.player.lastName}}</h2>
+                    <div class="buttons">
+					    <button class="button button-assertive">
+				     		<i class="icon ion-close"></i>
+				    	</button>
+				    </div>
+                </div>
+            </div>
+	  	</ion-content>
+	</ion-modal-view>
+</script>
+
+<script id="templates/modal-pending-edit.html" type="text/ng-template">
+	<ion-modal-view>
+	 
+		<ion-header-bar align-title="center" class="bar-calm">
+			<button ng-click="modalPendingEdit.hide()" class="button back-button buttons button-clear header-item">
+				<i class="icon ion-android-close"></i> 
+			</button>
+			<h1 class="title" >Convites pendentes</h1>
+		</ion-header-bar>
+
+	  	<ion-content class="padding">
+
+	  		<div class="list" ng-repeat="invitation in invitedsList" >
+                <div class="item item-avatar item-button-right">
+                    <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png">
+                    <h2>{{invitation.player.firstName}} {{invitation.player.lastName}}</h2>
+                    <div class="buttons">
+					    <button class="button button-assertive">
+				     		<i class="icon ion-close"></i>
+				    	</button>
+				    </div>
+                </div>
+            </div>
+	  	</ion-content>
+	</ion-modal-view>
+</script>
+
+<script id="templates/modal-declined-edit.html" type="text/ng-template">
+	<ion-modal-view>
+	 
+		<ion-header-bar align-title="center" class="bar-calm">
+			<button ng-click="modalDeclinedEdit.hide()" class="button back-button buttons button-clear header-item">
+				<i class="icon ion-android-close"></i> 
+			</button>
+			<h1 class="title" >Convites recusados</h1>
+		</ion-header-bar>
+
+	  	<ion-content class="padding">
+			<div class="list" ng-repeat="invitation in declinedsList" >
+                <div class="item item-avatar item-button-right">
+                    <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png">
+                    <h2>{{invitation.player.firstName}} {{invitation.player.lastName}}</h2>
+                </div>
+            </div>
+	  		
+	  	</ion-content>
 	</ion-modal-view>
 </script>

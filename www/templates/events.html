@@ -1,34 +1,23 @@
-<ion-view view-title="Eventos"  hide-back-button="false">
+<ion-view view-title="{{eventsTitle}}"  hide-back-button="false">
 	
 	<ion-nav-buttons side="right">
-		<button menu-toggle="right" class="button button-icon icon ion-funnel" ng-click="modalFilter()"></button>
-		<!-- <button menu-toggle="right" class="button button-icon icon ion-navicon"></button> -->
+		<button menu-toggle="right" ng-if="menuName == 'eventsMenu'" class="button button-icon icon ion-funnel" ng-click="modalFilter()"></button>
 	</ion-nav-buttons>
 	
 	<ion-content style="background-color: #e5e5e5">	
 		<ion-refresher pulling-text="" on-refresh="filterEvents()">
 		</ion-refresher>	
-		<!-- <ul class="list" >
-      		<li ng-click="viewEvent(event); $event.stopPropagation(); " class="item striped item-button-right item-thumbnail-left" ng-repeat="event in events">
-	            <img ng-src="img/sports.png"> 
 
-        		<h2>01/01/2016</h2>
-          		<h4>{{ event.modality.name }} - {{ event.name }}</h4>
-          		<h4><b> Organizador: {{ event.owner.firstName }} {{ event.owner.lastName }}</b></h4>
-          		<h4><b> 2 Vaga(s)</b></h4>
-                <div class="buttons">
-                    <button class="button button-assertive" ng-if="event.admin" ng-click="editEvent(event); $event.stopPropagation();">
-                        <i class="icon ion-gear-a"></i>
-                    </button>
-                </div>
-        		
-			 </li>
-	     </ul> -->
+        <div class="list card" ng-if="events && events.length == 0">
+            <div class="item">
+                Nenhum registro encontrado
+            </div>
+        </div>
 
-        <div class="list card" ng-repeat="event in events">
+        <div class="list card" ng-repeat="event in events" ng-if="events">
             <div class="item item-avatar item-button-right">
-                <img ng-src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/5/005/04f/3b3/37a0f9b.jpg">
-                <!-- <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png"> -->
+                <!-- <img ng-src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/5/005/04f/3b3/37a0f9b.jpg"> -->
+                <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png">
                 
                 <span style="color: black; font-size: 15px; font-weight: 600;">
                     {{ event.owner.firstName }} {{ event.owner.lastName }}
@@ -39,23 +28,32 @@
                 
                 <p> <h6 style="color: #b2b2b2">{{timestampToDateStr(event.dateCreation)}}</h6></p>
 
-                <!-- <button class="button button-dark" ng-if="event.admin" ng-click="editEvento(event); $event.stopPropagation();">
-                        <i class="icon ion-gear-a"> </i>
-                </button> -->
-
                 <button class="button button-light" ng-if="event.admin" ng-click="showPopoverAdmin($event, event)">
                         <i class="icon ion-gear-a" > </i>
                 </button>
 
+            </div>
+            
+            <div class="item item-body" ng-if="event.invited" style="padding: 0px; height: 55px">
                 
-
+                    <div class="row" >
+                        <div class="col col-50" >
+                            <button class="button button-small button-balanced" ng-click="answerInvited(event, true)" style="width: 100%; ">
+                                Sim
+                            </button>
+                        </div>
+                        <div class="col col-50" >
+                            <button class="button button-small button-assertive" ng-click="answerInvited(event, false)" style="width: 100%">
+                                Não
+                            </button>
+                        </div>
+                    </div>  
 
             </div>
+            
             <div class="item item-body" style="padding: 0px">
 
-                <!-- <div class="item item-thumbnail-right"> -->
                 <div class="item item-button-right" >
-                    <!-- <img ng-src="img/sports.png" style="max-height: 40px; max-width: 35px;"> -->
                     <button class="button button-small" 
                         style="width: 80px; text-align: center; vertical-align:middle; display: block;
                         font-size: 11px; border:solid 2px;   border-radius:5px; border-color: {{event.modality.color}}; ">
@@ -66,29 +64,49 @@
                     <p style="margin-top:0px; margin-bottom:0px; color: #37474F">{{timestampToDate(event.date)}}</p>
                     <p style="margin-top:0px; margin-bottom:0px; color: #37474F">{{event.local}}</p>
                     <p style="margin-top:0px; margin-bottom:0px; color: #37474F">{{event.city.name}} -   {{event.city.state.initials}}</p>
-                    <!-- <p style="margin-top:0px; margin-bottom:0px; color: #37474F" ></p> -->
                     
-                    <p>
+                    <!-- <p>
                         <a class="subdued calm" ng-click="openModalConfirmeds()">10 confirmado(s)</a>
                         <a class="subdued">5 vaga(s)</a>
-                    </p>
+                    </p> -->
                 </div>
+
+            </div>
+
+            <div class="item item-body" style="padding: 0px; text-align: center">
                 
-                
+                    <div class="row" >
+                        <div class="col col-50" >
+                            <a class="subdued balanced" ng-click="openModalConfirmeds(event)">{{event.invitationsSummary.confirmed}} confirmado(s)</a>
+                        </div>
+                        <div class="col col-50">
+                            <a class="subdued">{{event.invitationsSummary.seat}} vaga(s)</a>
+                        </div>
+                    </div>  
+
             </div>
             <div class="item tabs tabs-secondary tabs-icon-left " ng-if="!event.admin">
-                <!-- <a class="tab-item" href="#">
-                    <i class="icon ion-thumbsup"></i>
-                    Curtir
-                </a> -->
-                <a class="tab-item" ng-if="!event.solicitationSent" ng-click="solicitation(event); $event.stopPropagation();">
+
+                <a class="tab-item" ng-if="!event.invited && !event.requested && !event.confirmed && event.invitationsSummary.seat > 0" ng-click="requestEvent(event); $event.stopPropagation();">
                     <i class="icon ion-person-add"></i>
                     Participar
                 </a>
 
-                <a class="tab-item positive" ng-if="event.solicitationSent" ng-click="solicitation(event); $event.stopPropagation();">
+                
+
+                <a class="tab-item positive"  ng-if="event.requested" ng-click="cancelInvitation(event); $event.stopPropagation();">
                     <i class="icon ion-person-add"></i>
                     Solicitação enviada
+                </a>
+
+                <a class="tab-item balanced" ng-if="event.confirmed" ng-click="cancelConfirmation(event); $event.stopPropagation();">
+                    <i class="icon ion-checkmark balanced"></i>
+                    Confirmado
+                </a>
+
+                <a class="tab-item assertive" ng-if="event.invitationsSummary.seat == 0" >
+                    <i class="icon ion-sad-outline assertive"></i>
+                    Vagas esgotadas
                 </a>
 
                 <a class="tab-item" href="#">
@@ -110,66 +128,132 @@
 
 	<script id="templates/modal-filter-events.html" type="text/ng-template">
 		<ion-modal-view class="custom-alert">
-			<ion-header-bar align-title="left" class="bar-calm">
+			<ion-header-bar align-title="center" class="bar-calm">
 				<button ng-click="modalFilterEvents.hide();$event.stopPropagation();" class="button back-button buttons button-clear header-item">
 					<i class="icon ion-android-close"></i> 
 				</button>
 				<h1 class="title">Filtros</h1>
-				<div class="buttons buttons-right"></div>
+				<div class="buttons buttons-right">
+
+                </div>
 			</ion-header-bar>
 
 			<ion-content item-button-bottom>
-                    <div class="list">
-                        <div class="item item-divider">
-                            Modalidade
-                        </div>
-                        <label class="item item-input item-select" >
-                            <span class="input-label">Modalidade</span>
-                            <select ng-model="filter.event.modality.id" >
-                                <option value="" disabled selected>Todas</option>
-                                <option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
-                            </select>
-                        </label>
-                        <div class="item item-divider">
-                            Data
-                        </div>
+                <div class="list" style="padding-top:20px;">
+                    
+                    <!-- <label class="toggle">
+                           <input type="checkbox">
+                           <div class="track">
+                             <div class="handle"></div>
+                           </div>
+                        </label> -->
 
-                        <label class="item item-input ">
-                            <span class="input-label">Data</span>
-                            <input type="date" style="text-align: right;">
-                        </label>
+                    <div class="item item-divider positive">
+                        Dados do evento
+                    </div> 
 
-                        <div class="item item-divider">
-                            Local
+                    <div class="row" >
+                        <div class="col col-10 text-center" style="padding-top: 40px">
+                            <i class="icon ion-trophy" style="font-size: 30px;"></i>                    
                         </div>
-                        <label class="item item-input item-select" >
-                            <span class="input-label">Estado</span>
-                            <select ng-model="filter.event.modality.id" >
-                                <option value="" disabled selected>Todas</option>
-                                <option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
-                            </select>
-                        </label>
-                        <label class="item item-input item-select" >
-                            <span class="input-label">Cidade</span>
-                            <select ng-model="filter.event.modality.id" >
-                                <option value="" disabled selected>Todas</option>
-                                <option ng-repeat="item in filter.modalities" value="{{item.id}}">{{item.name}}</option>
-                            </select>
-                        </label>
-                        
+                        <div class="col col-90" style="border: 0px">
+                            <label class="item item-input item-stacked-label" style="border: 0px">
+                                <span class="input-label">Nome</span>
+                                <input type="text" placeholder="" ng-model="filter.event.name" 
+                                    style="border-bottom: 1px; border-style: solid;">
+                            </label>    
+                        </div>
+                    </div>  
+
+                    <div class="row"  style="border: 0px">
+                        <div class="col col-45 col-offset-10" style="border: 0px">
+                            <label class="item item-input item-stacked-label" style="border: 0px">
+                                <span class="input-label">Código</span>
+                                <input type="text" placeholder="" ng-model="filter.event.id" 
+                                    style="border-bottom: 1px; border-style: solid;">
+                            </label>    
+                            
+                        </div>
+                        <div class="col" style="border: 0px">
+                            <label class="item item-input item-stacked-label" style="border: 0px">
+                                <span class="input-label">Data</span>   
+                                <input type="date" ng-model="filter.event.date" style="border-bottom: 1px; border-style: solid;">  
+                            </label>
+                        </div>
                     </div>
 
-                    <div class="item tabs tabs-secondary tabs-icon-left" style="margin-top: 20px">
-                        <a class="tab-item" ng-click="clearFilter(); modalFilterEvents.hide()" style="font-weight: 800">
-                            <!-- <i class="icon ion-star calm"></i> -->
-                            LIMPAR TUDO 
-                        </a>
-                        <a class="tab-item" ng-click="filterEvents(); modalFilterEvents.hide()" style="font-weight: 800;  color: #455A64">
-                            <!-- <i class="icon ion-person-add calm"></i> -->
-                            APLICAR FILTRO
-                        </a>
-                        
+         
+                    <div class="row" >
+                        <div class="col col-90 col-offset-10" style="border: 0px">
+                            <label class="item item-input item-stacked-label" style="border: 0px">
+                                <div  style="border: 0px">
+                                    <span class="input-label">Modalidade</span>
+                                </div>
+                                <select ng-model="filter.event.modality.id"  ng-options="item.id as item.name for item in filter.modalities"
+                                 placeholder="Modalidade" style="border:0px; position: relative !important; width: 100%; border-bottom: 1px; border-style: solid;">
+                                    <option value="">Todas</option>
+                                </select>
+                            </label>    
+                        </div>
+                    </div>  
+
+                    <div class="item item-divider positive">
+                        Local
                     </div>
+                        
+                    <div class="row" >
+                        <div class="col col-10 text-center" style="padding-top: 30px">
+                            <i class="icon ion-ios-location" style="font-size: 30px;"></i>                  
+                        </div>
+                        <div class="col col-90" style="border: 0px">
+                            <label class="item item-input item-stacked-label" style="border: 0px">
+                                <div  style="border: 0px">
+                                    <span class="input-label">Estado</span>
+                                </div>
+                                <select ng-model="filter.event.state.id"  ng-change="onSelectStateFilterEvent()"
+                                    ng-options="item.id as item.name for item in filter.states"
+                                    style="border:0px; position: relative !important; width: 100%; border-bottom: 1px; border-style: solid;">
+                                    <option value="">Todos</option>
+                                </select>
+
+
+                            </label>    
+                        </div>
+                    </div>  
+
+                    <div class="row" >
+                        <div class="col col-90 col-offset-10" style="border: 0px">
+                            <label class="item item-input item-stacked-label" style="border: 0px">
+                                <div  style="border: 0px">
+                                    <span class="input-label">Cidade</span>
+                                </div>
+                                <select ng-model="filter.event.city.id"  
+                                    ng-options="item.id as item.name for item in filter.cities"
+                                    style="border:0px; position: relative !important; width: 100%; border-bottom: 1px; border-style: solid;">
+                                    <option value="">Todas</option>
+                                </select>
+                                
+                            </label>    
+                        </div>
+                    </div>  
+
+                </div>
+
+
+                <div class="item tabs tabs-secondary tabs-icon-left" style="margin-top: 20px">
+                    <a class="tab-item" ng-click="clearFilter(); modalFilterEvents.hide()" style="font-weight: 800">
+                        LIMPAR FILTROS 
+                    </a>
+                    <a class="tab-item" ng-click="filterEvents(); modalFilterEvents.hide()" style="font-weight: 800;  color: #000000; background-color: #33cd5f">
+                        FILTRAR
+                    </a>
+                </div>
+
+                <!-- <div style="padding: 20px">
+                    <button class="button button-block button-positive" ng-click="filterEvents(); modalFilterEvents.hide()">
+                      FILTRAR
+                    </button>
+                </div> -->
 				        
 			</ion-content>
 			
@@ -179,7 +263,7 @@
 
     <script id="templates/modal-confirmeds.html" type="text/ng-template">
         <ion-modal-view class="custom-alert">
-            <ion-header-bar align-title="left" class="bar-calm">
+            <ion-header-bar align-title="center" class="bar-calm">
                 <button ng-click="modalConfirmeds.hide();$event.stopPropagation();" class="button back-button buttons button-clear header-item">
                     <i class="icon ion-android-close"></i> 
                 </button>
@@ -188,10 +272,13 @@
             </ion-header-bar>
 
             <ion-content item-button-bottom>
-                    <div class="list">
+            
+                    <div class="list" ng-repeat="invitation in confirmedsList" ng-if="events">
                         <div class="item item-avatar">
-                            <img ng-src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/5/005/04f/3b3/37a0f9b.jpg">
-                            <h2>Harry Trinta</h2>
+                            <!-- <img ng-src="https://media.licdn.com/mpr/mpr/shrinknp_200_200/p/5/005/04f/3b3/37a0f9b.jpg"> 
+                            -->
+                            <img ng-src="http://www.freeiconspng.com/uploads/profile-icon-9.png">
+                            <h2>{{invitation.player.firstName}} {{invitation.player.lastName}}</h2>
                             <!-- <p>Back off, man. I'm a scientist.</p> -->
                         </div>
                     </div>
@@ -217,33 +304,3 @@
     </script>
 
 </ion-view>
-
-
-
-
-<!-- <script id="templates/modal.html" type="text/ng-template">
-      <ion-modal-view class="customeModel">
-        <ion-header-bar class="bar bar-header bar-positive">
-          <h1 class="title">New Contact</h1>
-          <button class="button button-clear button-primary" ng-click="modal.hide()">Cancel</button>
-        </ion-header-bar>
-        <ion-content class="padding">
-          <div class="list">
-            <label class="item item-input">
-              <span class="input-label">First Name</span>
-              <input ng-model="newUser.firstName" type="text">
-            </label>
-            <label class="item item-input">
-              <span class="input-label">Last Name</span>
-              <input ng-model="newUser.lastName" type="text">
-            </label>
-            <label class="item item-input">
-              <span class="input-label">Email</span>
-              <input ng-model="newUser.email" type="text">
-            </label>
-            <button class="button button-full button-positive" ng-click="createContact(newUser)">Create</button>
-          </div>
-        </ion-content>
-      </ion-modal-view>
-    </script>
-     -->

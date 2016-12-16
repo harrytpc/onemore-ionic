@@ -1,9 +1,30 @@
 angular.module('starter.controllers')
 
 .controller('EventsCtrl', function($scope, $ionicModal, $timeout, $rootScope, $http, 
-  EventService, $ionicPopup, ModalityService, StateService, RelationshipService, $ionicPopover ) {
+  EventService, $ionicPopup, ModalityService, StateService, RelationshipService, InvitationService, $ionicPopover, $stateParams, $ionicLoading ) {
 
-  $scope.solicitation = solicitation;
+  $scope.menuName = $stateParams.menuName; //getting fooVal
+  
+  var loadingConfig = {
+      content: 'Loading',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    };
+
+  if($scope.menuName == 'eventsAdminMenu'){
+    $scope.eventsTitle = 'Administrar Eventos';
+  } else if($scope.menuName == 'confirmedMenu'){
+    $scope.eventsTitle = 'Eventos confirmados';
+  } else if($scope.menuName == 'pendingMenu'){
+    $scope.eventsTitle = 'Convites pendentes';
+  }else if($scope.menuName == 'eventsMenu'){
+    $scope.eventsTitle = 'Eventos';
+  }
+  
+  
+  // $scope.solicitation = solicitation;
   $scope.filterEvents = filterEvents;
   $scope.clearFilter = clearFilter;
   
@@ -13,8 +34,20 @@ angular.module('starter.controllers')
     $scope.filter = {} 
     $scope.filter.event = {};
     filterEvents();
-    findModalitiesFilter() ;
+    
+    loadFilterSelects();
+  }
 
+  function loadFilterSelects(){
+    findModalitiesFilter() ;
+    findStatesFilter();
+  }
+
+  function findStatesFilter(){
+    StateService.findStates()
+      .success(function (data) {
+        $scope.filter.states = data;
+      });    
   }
 
   function findModalitiesFilter(){
@@ -26,6 +59,22 @@ angular.module('starter.controllers')
         $scope.status = 'Erro ao pesquisar modalidades';
         console.log($scope.status);
       });
+  }
+
+  $scope.onSelectStateFilterEvent = function(){
+    if(!$scope.filter.event.state){
+      $scope.filter.cities = [];
+    }
+
+    StateService.findCitiesByStateId($scope.filter.event.state.id)
+      .success(function (data) {
+          $scope.filter.cities = data;
+      })
+      .error(function (error) {
+          $scope.status = 'Erro ao pesquisar cidades';
+          console.log($scope.status);
+          // alert($scope.status);
+      }); 
   }
 
   function clearFilter(){
@@ -48,40 +97,84 @@ angular.module('starter.controllers')
   };
 
 
-  function solicitation(event){
+  $scope.requestEvent = function (event){
 
-    if(event.solicitationSent == null || event.solicitationSent == false){
-      event.solicitationSent = true;      
-    }else{
-      event.solicitationSent = false;      
-    }
-
-    // event.solicitationSent = event.solicitationSent == false || ;
-
-     // var confirmPopup = $ionicPopup.confirm({
-     //   title: 'Solicitação',
-     //   template: 'Enviar solicitação para partipar do evento?',
-     //   cssClass: 'custom-alert',
-     //   buttons: [{ // Array[Object] (optional). Buttons to place in the popup footer.
-     //      text: 'Não',
-     //      type: 'button-default',
-     //      onTap: function(e) {
-     //        // e.preventDefault() will stop the popup from closing when tapped.
-     //        // e.preventDefault();
-     //      }
-     //    }, {
-     //      text: 'Sim',
-     //      type: 'button-positive',
-     //      onTap: function(e) {
-     //        // Returning a value will cause the promise to resolve with the given value.
-     //        // return scope.data.response;
-     //        event.solicitationSent = true;
-     //      }
-     //    }]
-     // });
-   
+    $ionicLoading.show(loadingConfig);
+    
+    EventService.request(event.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        event.requested = true;
+        event.invitation = data;
+        console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+        event.requested = false;
+        $scope.status = 'Erro ao enviar convites';
+        console.log($scope.status);
+      });
   }
 
+  $scope.cancelInvitation = function(event){
+    $ionicLoading.show(loadingConfig);
+    
+    InvitationService.cancelInvitation(event.invitation.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        event.requested = false;
+        event.invitation = {};
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+        // event.requested = tr;
+        $scope.status = 'Erro ao enviar convites';
+        console.log($scope.status);
+      }); 
+  }
+
+  $scope.cancelConfirmation = function(event){
+    $ionicLoading.show(loadingConfig);
+    
+    InvitationService.cancelInvitation(event.invitation.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        event.confirmed = false;
+        event.invitation = {};
+        event.invitationsSummary.confirmed = event.invitationsSummary.confirmed - 1;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+        // event.requested = tr;
+        $scope.status = 'Erro ao enviar convites';
+        console.log($scope.status);
+      });  
+  }
+
+
+  $scope.answerInvited = function(event, answer){
+    $ionicLoading.show(loadingConfig);
+
+    InvitationService.answerInvitation(event.invitation.id, answer)
+      .success(function (data) {
+        $ionicLoading.hide();
+        event.invited = false;
+        if(answer == true){
+          event.confirmed = true;  
+          event.invitationsSummary.confirmed = event.invitationsSummary.confirmed + 1;
+        }
+        event.invitation = data;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+        // event.requested = tr;
+        $scope.status = 'Erro ao enviar convites';
+        console.log($scope.status);
+      }); 
+  }
 
   
   $scope.modalFilter = function(){
@@ -96,6 +189,24 @@ angular.module('starter.controllers')
   }
 
   $scope.openModalConfirmeds = function(event){
+    $scope.confirmedsList = [];
+
+    $ionicLoading.show(loadingConfig);
+
+    InvitationService.getConfirmeds(event.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        $scope.confirmedsList = data;
+        
+        console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+        // event.requested = tr;
+        $scope.status = 'Erro ao buscar confirmados';
+        console.log($scope.status);
+      }); 
+
     $ionicModal.fromTemplateUrl('templates/modal-confirmeds.html', {
       scope: $scope
     }).then(function(modal) {
@@ -154,7 +265,7 @@ angular.module('starter.controllers')
           $scope.event.nameTemp = $scope.event.name;
           $scope.event.state = $scope.event.city.state
           // $scope.event.modality.id = '4';
-          getInvitations($scope.event.id);
+          // getInvitations($scope.event.id);
 
           StateService.findStates()
           .success(function (data) {
@@ -284,7 +395,8 @@ angular.module('starter.controllers')
            });
 
            alertPopup.then(function(res) {
-             
+             $scope.modalEditEvent.hide();
+             init();
            });
 
         })
@@ -308,6 +420,7 @@ angular.module('starter.controllers')
 
            alertPopup.then(function(res) {
              $scope.modalEditEvent.hide();
+             init();
            });
 
         })
@@ -352,6 +465,7 @@ angular.module('starter.controllers')
     EventService.invite($scope.event.id, $scope.selectedUsers)
       .success(function (data) {
         // getInvitations();
+        $scope.event.invitationsSummary.pendingInvites = $scope.event.invitationsSummary.pendingInvites + $scope.selectedUsers.length;
         console.log(data)
       })
       .error(function (error) {
@@ -389,7 +503,7 @@ angular.module('starter.controllers')
   $scope.timestampToDate = function(dateTimestamp){
     var date = new Date(dateTimestamp);
 
-    return (pad(date.getDate()) + '/' + pad(date.getMonth()) + '/' + date.getFullYear() 
+    return (pad(date.getDate()) + '/' + pad(date.getMonth()+1) + '/' + date.getFullYear() 
       + ' às ' + pad(date.getHours()) + ':' + pad(date.getMinutes()));
 
   }
@@ -426,7 +540,7 @@ angular.module('starter.controllers')
           }
         }, {
           text: 'Sim',
-          type: 'button-positive',
+          type: 'button-assertive', 
           onTap: function(e) {
             // Returning a value will cause the promise to resolve with the given value.
             // return scope.data.response;
@@ -436,5 +550,117 @@ angular.module('starter.controllers')
      });
 
   }
+
+  $scope.openModalSolicPartEdit = function(event){
+
+    $scope.SolicsList = [];
+    $ionicLoading.show(loadingConfig);
+    InvitationService.getPendingApproval(event.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        $scope.SolicsList = data;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+      }); 
+    
+    $ionicModal.fromTemplateUrl('templates/modal-solic-part-edit.html', {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modalSolicPartEdit = modal;
+        $scope.modalSolicPartEdit.show()
+      });
+
+  }
+  
+  $scope.openModalConfirmedsEdit = function(event){
+    
+    $scope.confirmedsList = [];
+    $ionicLoading.show(loadingConfig);
+    InvitationService.getConfirmeds(event.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        $scope.confirmedsList = data;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+      }); 
+
+    $ionicModal.fromTemplateUrl('templates/modal-confirmeds-edit.html', {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modalConfirmedsEdit = modal;
+        $scope.modalConfirmedsEdit.show()
+      });
+
+
+  }
+
+
+  $scope.openModalPendingEdit = function(event){
+    $scope.invitedsList = [];
+    $ionicLoading.show(loadingConfig);
+    InvitationService.getInviteds(event.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        $scope.invitedsList = data;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+      }); 
+    $ionicModal.fromTemplateUrl('templates/modal-pending-edit.html', {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modalPendingEdit = modal;
+        $scope.modalPendingEdit.show()
+      });
+
+  }
+
+  $scope.openModalDeclinedEdit = function(event){
+    $scope.declinedsList = [];
+    $ionicLoading.show(loadingConfig);
+    InvitationService.getDeclined(event.id)
+      .success(function (data) {
+        $ionicLoading.hide();
+        $scope.declinedsList = data;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+      }); 
+    $ionicModal.fromTemplateUrl('templates/modal-declined-edit.html', {
+        scope: $scope
+      }).then(function(modal) {
+        $scope.modalDeclinedEdit = modal;
+        $scope.modalDeclinedEdit.show()
+      });
+
+  }
+
+  $scope.answerSolic = function(invitationId, answer){
+    $ionicLoading.show(loadingConfig);
+
+    InvitationService.answerInvitation(invitationId, answer)
+      .success(function (data) {
+        $ionicLoading.hide();
+        // event.invited = false;
+        // if(answer == true){
+        //   event.confirmed = true;  
+        //   event.invitationsSummary.confirmed = event.invitationsSummary.confirmed + 1;
+        // }
+        // event.invitation = data;
+        // console.log(data)
+      })
+      .error(function (error) {
+        $ionicLoading.hide();
+        // event.requested = tr;
+        $scope.status = 'Erro ao enviar convites';
+        console.log($scope.status);
+      }); 
+  }  
 
 });

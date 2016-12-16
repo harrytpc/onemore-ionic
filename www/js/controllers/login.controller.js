@@ -1,7 +1,7 @@
 angular.module('starter.controllers')
 
 .controller('LoginCtrl', function($scope, $ionicModal, $timeout, $rootScope, UserService,
-  $state, $ionicPopup, $location, KeycloakService, $q, StorageService, jwtHelper, $ionicSideMenuDelegate) {
+  $state, $ionicPopup, $location, KeycloakService, $q, StorageService, jwtHelper, $ionicSideMenuDelegate, $localStorage) {
 
   $ionicSideMenuDelegate.canDragContent(false);
 
@@ -25,7 +25,8 @@ angular.module('starter.controllers')
 
                 UserService.check(data) 
                   .success(function (data) {
-
+                    $localStorage.loggedUser = data;
+                    console.log(data);
                     $state.go('app.events');    
 
                   });
@@ -67,8 +68,9 @@ angular.module('starter.controllers')
 
             UserService.check(data)
               .success(function (data) {
-
-                $state.go('app.events');    
+                console.log(data);
+                $localStorage.loggedUser = data;
+                $state.go('app.events', {menuName: 'eventsMenu'});    
 
               });
           });

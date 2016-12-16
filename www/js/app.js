@@ -11,14 +11,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 .run(function($ionicPlatform, $rootScope) {
 
-   // $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
-   // $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
+   $rootScope.baseUrlBackend = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/apiman-gateway/onemore/services/1.0';
+   $rootScope.baseUrlSSO = 'http://ec2-52-42-47-0.us-west-2.compute.amazonaws.com:8080/auth/realms/onemore';
   
   // $rootScope.baseUrlBackend = 'http://localhost:8080/apiman-gateway/onemore/services/1.0';
   // $rootScope.baseUrlSSO = 'http://localhost:8080/auth/realms/socc3r';
   
-  $rootScope.baseUrlBackend = 'http://10.0.0.17:8080/apiman-gateway/onemore/services/1.0';
-  $rootScope.baseUrlSSO = 'http://10.0.0.17:8080/auth/realms/socc3r';
+  // $rootScope.baseUrlBackend = 'http://10.0.0.24:8080/apiman-gateway/onemore/services/1.0';
+  // $rootScope.baseUrlSSO = 'http://10.0.0.24:8080/auth/realms/socc3r';
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -68,7 +68,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   })
 
   .state('app.events', {
-    url: '/events',
+    url: '/events/:menuName',
     cache: false,
     views: {
       'menuContent': {
@@ -113,31 +113,31 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
 
   .state('app.eventsAdmin', {
-    url: '/events-admin',
+    url: '/events-admin/:menuName',
     views: {
       'menuContent': {
-        templateUrl: 'templates/eventsAdmin.html',
-        controller: 'EventsAdminCtrl'
+        templateUrl: 'templates/events.html',
+        controller: 'EventsCtrl'
       }
     }
   })
 
   .state('app.confirmedEvents', {
-    url: '/confirmed-events',
+    url: '/confirmed-events/:menuName',
     views: {
       'menuContent': {
-        templateUrl: 'templates/confirmedEvents.html',
-        controller: 'ConfirmedEventsCtrl'
+        templateUrl: 'templates/events.html',
+        controller: 'EventsCtrl'
       }
     }
   })
 
   .state('app.pendingInvites', {
-    url: '/pending-invites',
+    url: '/pending-invites/:menuName',
     views: {
       'menuContent': {
-        templateUrl: 'templates/pendingInvites.html',
-        controller: 'PendingInvitesCtrl'
+        templateUrl: 'templates/events.html',
+        controller: 'EventsCtrl'
       }
     }
   })

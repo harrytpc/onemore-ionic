@@ -100,9 +100,10 @@ angular.module('starter.controllers')
 		}else{
 			
 			$scope.event.date = $scope.event.dateStr;
+			
 			EventService.insert($scope.event)
 				.success(function (data) {
-          $scope.event = data;
+          			$scope.event = data;
 
 					var alertPopup = $ionicPopup.alert({
 				     title: 'Sucesso!',

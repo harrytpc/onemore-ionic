@@ -23,9 +23,14 @@
           <img src="http://www.freeiconspng.com/uploads/person-icon-user-person-man-icon-4.png" style="height:120px">
         </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.events">
+        <ion-item class="text-center">
+          {{loggedUser}} 
+        </ion-item>
+        
+
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.events({menuName: 'eventsMenu'})">
           <i class="icon ion-search calm"></i>
-          <h2 class="calm">Buscar eventos</h2>
+          <h2 class="calm">Eventos</h2>
         </ion-item>
 
 
@@ -34,20 +39,20 @@
           <h2 class="calm">Nova partida</h2>
         </ion-item> -->
 
-        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.eventsAdmin">
+        <!-- <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.eventsAdmin({menuName: 'eventsAdminMenu'})">
           <i class="icon ion-gear-a calm" ></i>
           <h2 class="calm">Administrar eventos</h2>
         </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.confirmedEvents">
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.confirmedEvents({menuName: 'confirmedMenu'})">
           <i class="icon ion-checkmark-round calm"></i>
-          <h2 class="calm">Eventos confirmadas</h2>
+          <h2 class="calm">Eventos confirmados</h2>
         </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.pendingInvites">
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.pendingInvites({menuName: 'pendingMenu'})">
           <i class="icon ion-email-unread calm"></i>
           <h2 class="calm">Convites pendentes</h2>
-        </ion-item>
+        </ion-item> -->
 
         <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.contacts">
           <i class="icon ion-person calm"></i>
